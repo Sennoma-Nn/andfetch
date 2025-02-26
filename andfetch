@@ -1,0 +1,217 @@
+#!/data/data/com.termux/files/usr/bin/env nu
+
+def get_ascii_colors [ icon ] {
+    let colors = {
+        OnePlus: ["\e[31m"],
+        Xiaomi: ["\e[38;2;255;103;0m"]
+    }
+
+    if ($icon in $colors) {
+        echo $colors | get $icon
+    } else {
+        echo ["\e[0m"]
+    }
+}
+
+def get_ascii_icon [ icon ] {
+    let icon_colors = get_ascii_colors $icon
+    let ascii_icons = {
+
+OnePlus: 
+$"($icon_colors.0)                      ██    
+($icon_colors.0)                      ██    
+($icon_colors.0)████████████████  ██████████
+($icon_colors.0)██                    ██    
+($icon_colors.0)██                    ██    
+($icon_colors.0)██      █████               
+($icon_colors.0)██         ██         ██    
+($icon_colors.0)██         ██         ██    
+($icon_colors.0)██         ██         ██    
+($icon_colors.0)██         ██         ██    
+($icon_colors.0)██      ████████      ██    
+($icon_colors.0)██                    ██    
+($icon_colors.0)██                    ██    
+($icon_colors.0)████████████████████████    
+                            "
+
+Xiaomi: 
+$"($icon_colors.0) .llllllllllllllllllllllllllllllll. 
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)lllllll              'lll    lllllll
+($icon_colors.0)lllllll    lllllll.    ll    lllllll
+($icon_colors.0)lllllll    ll    ll    ll    lllllll
+($icon_colors.0)lllllll    ll    ll    ll    lllllll
+($icon_colors.0)lllllll    ll    ll    ll    lllllll
+($icon_colors.0)lllllll    ll    ll    ll    lllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0) 'llllllllllllllllllllllllllllllll' 
+                                    "
+
+    }
+    if ($icon in $ascii_icons) {
+        echo $ascii_icons | get $icon
+    } else {
+        echo ""
+    }
+}
+
+def rooted_info [] {
+    if ((whoami) == "root") {
+        echo "rooted"
+    } else {
+        let root_paths = [
+            "/system/bin/su"
+            "/system/xbin/su"
+            "/sbin/su"
+        ]
+
+        if ($root_paths | any { |it| $it | path exists }) {
+            echo "su detected"
+        } else {
+            echo "su not detected"
+        }
+    }
+}
+
+def kernel_info [] {
+    let kernel_release = (uname | get "kernel-release")
+    echo $kernel_release
+}
+
+def version_info [] {
+    echo $"Android (getprop ro.build.version.release) \((getprop ro.build.version.security_patch)\)"
+}
+
+def cpu_info [] {
+    open /proc/cpuinfo | lines | where $it =~ 'Hardware' | split column ': ' | get column2 | uniq | str join ', '
+}
+
+def memory_info [] {
+    open /proc/meminfo | grep MemTotal | awk '{printf "%.2f GB", $2/1024/1024}'
+}
+
+def get_shell [] {
+    let shell_path = $env.shell | split row "/"
+    let path_len = $shell_path | length
+    
+    echo $shell_path | last
+}
+
+def color_info [type] {
+    mut text = ""
+    mut t = 3
+    if $type == "bright" {
+        $t = 9
+    }
+
+    $text += " "
+    for $j in 0..7 {
+        $text += $"\e[($t)($j)m•\e[0m "
+    }
+
+    echo $text
+}
+
+def show_info [ OS ] {
+    let colors = get_ascii_colors $OS
+    let info_list = {
+        $"($colors.0)Distro   ": $"\e[0m($OS)"
+        $"($colors.0)Version  ": $"\e[0m(version_info)"
+        $"($colors.0)Kernel   ": $"\e[0m(kernel_info)"
+        $"($colors.0)Root     ": $"\e[0m(rooted_info)"
+    }
+
+    let hardware_list = {
+        $"($colors.0)Cpu Model": $"\e[0m(cpu_info)"
+        $"($colors.0)Memory   ": $"\e[0m(memory_info)"
+    }
+    
+    let terminal_shell_list = {
+        $"($colors.0)Shell    ": $"\e[0m(get_shell)"
+        $"($colors.0)Color    ": $"(color_info 'normal')"
+        $"($colors.0)Bright   ": $"(color_info 'bright')"
+    }
+
+    let info_list_str = $"($info_list | table)" + "\n"
+    let hardware_list_str = $"($hardware_list | table)" + "\n"
+    let terminal_list_str = $"($terminal_shell_list | table)"
+    let all_info = $info_list_str + $hardware_list_str + $terminal_list_str
+
+    let icon = $"(get_ascii_icon $OS)"
+    let icon_lines = ($icon | split row "\n")
+    let info_lines = ($all_info | split row "\n")
+    let max_lines = ([($icon_lines | length), ($info_lines | length)] | math max)
+
+    let padded_icon = (
+        $icon_lines
+        | append (
+            1..($max_lines - ($icon_lines | length)) | each {|| 
+                $icon_lines | last
+            }
+        )
+    )
+
+    let padded_info = (
+        $info_lines
+        | append (
+            1..($max_lines - ($info_lines | length)) | each {|| 
+                ""
+            }
+        )
+    )
+
+    let icon_temp = (mktemp -t "icon.XXXXXX")
+    let info_temp = (mktemp -t "info.XXXXXX")
+    let icon_last_line = ($icon_lines | last)
+
+    let max_lines = ([($icon_lines | length), ($info_lines | length)] | math max)
+    let padded_icon = (
+        $icon_lines
+        | append (
+            1..($max_lines - ($icon_lines | length)) | each {|| 
+                $icon_last_line
+            }
+        )
+    )
+    let padded_info = (
+        $info_lines
+        | append (
+            1..($max_lines - ($info_lines | length)) | each {|| 
+                ""
+            }
+        )
+    )
+
+    let icon_width = (
+        $icon_last_line 
+        | str replace -a '\e\[[\d;]*m' ''
+        | str length
+    )
+
+    $padded_icon | str join "\n" | save $icon_temp --raw -f
+    $padded_info | str join "\n" | save $info_temp --raw -f
+
+    awk -v w=$icon_width '
+    NR==FNR {
+        icon[FNR]=$0
+        next
+    }
+    {
+        printf "%-*s\033[0m %s\n", w, icon[FNR], $0
+    }
+    ' $icon_temp $info_temp
+
+    rm -f $icon_temp $info_temp
+    
+}
+
+let OS = getprop ro.product.manufacturer
+show_info $OS
