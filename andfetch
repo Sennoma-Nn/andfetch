@@ -4,6 +4,7 @@ def get_ascii_colors [ icon ] {
     let colors = {
         OnePlus: ["\e[31m"],
         Xiaomi: ["\e[38;2;255;103;0m"]
+        OPPO: ["\e[32m"]
     }
 
     if ($icon in $colors) {
@@ -54,6 +55,19 @@ $"($icon_colors.0) .llllllllllllllllllllllllllllllll.
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0) 'llllllllllllllllllllllllllllllll' 
                                     "
+
+OPPO: 
+$"($icon_colors.0)      .:~!7?JJ??7~^.      
+($icon_colors.0)   :!YPGBBGGPPGGGBBG57^   
+($icon_colors.0) .?GBBP?~^:.....:~7YGBGY^ 
+($icon_colors.0).5BBG!              :5BBG~
+($icon_colors.0)7BGB!                .GGB5
+($icon_colors.0)?BGB~                .PGB5
+($icon_colors.0):PBBP~              :YBBG~
+($icon_colors.0) .JGBB57^:.    ..^!JGBB5~ 
+($icon_colors.0)   :7YGBBGGPPPPPGBBG5?~   
+($icon_colors.0)      .^!7JJYYJJ?!~:      
+($icon_colors.0)                          "
 
     }
     if ($icon in $ascii_icons) {
@@ -213,5 +227,14 @@ def show_info [ OS ] {
     
 }
 
-let OS = getprop ro.product.manufacturer
-show_info $OS
+def main [
+    --distro: string
+] {
+    mut display_os = (getprop ro.product.manufacturer)
+
+    if $distro != null {
+        $display_os = $distro
+    }
+
+    show_info $display_os
+}
