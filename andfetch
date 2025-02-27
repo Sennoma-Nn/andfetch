@@ -2,16 +2,16 @@
 
 def get_ascii_colors [ icon ] {
     let colors = {
-        OnePlus: ["\e[31m"],
-        Xiaomi: ["\e[38;2;255;103;0m"]
-        OPPO: ["\e[32m"]
+        OnePlus: ["\e[31m", "", "", ""],
+        Xiaomi: ["\e[38;2;255;103;0m", "", "", ""]
+        OPPO: ["\e[32m", "", "", ""]
         Google: ["\e[31m", "\e[33m", "\e[32m", "\e[34m"]
     }
 
     if ($icon in $colors) {
         echo $colors | get $icon
     } else {
-        echo ["\e[0m"]
+        echo ["\e[0m", "", "", ""]
     }
 }
 
