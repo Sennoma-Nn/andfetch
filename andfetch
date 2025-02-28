@@ -2,11 +2,13 @@
 
 def get_ascii_colors [ icon ] {
     let colors = {
-        OnePlus: ["\e[31m", "", "", ""],
+        OnePlus: ["\e[31m", "", "", ""]
         Xiaomi: ["\e[38;2;255;103;0m", "", "", ""]
         OPPO: ["\e[32m", "", "", ""]
         Google: ["\e[31m", "\e[33m", "\e[32m", "\e[34m"]
         vivo: ["\e[34m", "\e[37m", "", ""]
+        Huawei: ["\e[31m", "", "", ""]
+        realme: ["\e[33m", "", "", ""]
     }
 
     if ($icon in $colors) {
@@ -61,7 +63,7 @@ $"($icon_colors.0) .llllllllllllllllllllllllllllllll.
 OPPO: 
 $"($icon_colors.0)      .:~!7?JJ??7~^.      
 ($icon_colors.0)   :!YPGBBGGPPGGGBBG57^   
-($icon_colors.0) .?GBBP?~^:.....:~7YGBGY^ 
+($icon_colors.0) .?GBBP?~^'    ':~7YGBGY^ 
 ($icon_colors.0).5BBG!              :5BBG~
 ($icon_colors.0)7BGB!                .GGB5
 ($icon_colors.0)?BGB~                .PGB5
@@ -89,8 +91,7 @@ $"($icon_colors.0)             ......
 ($icon_colors.2)     .-=+++==========+++=($icon_colors.3)-.    
 ($icon_colors.2)        .:-==========-:.       
 ($icon_colors.2)             ......            
-($icon_colors.2)                               
-"
+($icon_colors.2)                               "
 
 vivo: 
 $"($icon_colors.0) .--========================--. 
@@ -109,8 +110,41 @@ $"($icon_colors.0) .--========================--.
 ($icon_colors.0)-===========--====--===========-
 ($icon_colors.0):==============================:
 ($icon_colors.0) .--========================--. 
-($icon_colors.0)                                
-"
+($icon_colors.0)                                "
+
+Huawei: 
+$"($icon_colors.0)          :+*#.  .#*+:          
+($icon_colors.0)         *@@@@#  #@@@@*         
+($icon_colors.0)    =+  :@@@@@@..@@@@@@:  +=    
+($icon_colors.0)   *@@#: %@@@@@--@@@@@% :%@@*   
+($icon_colors.0)  -@@@@@-:@@@@@==@@@@@:-@@@@@-  
+($icon_colors.0)  .@@@@@@+-@@@@==@@@@-+@@@@@@.  
+($icon_colors.0)=+::+%@@@@*-@@@==@@@-*@@@@%+::+=
+($icon_colors.0)#@@%*=+*%@@%-#@--@#-%@@%*+=*%@@#
+($icon_colors.0).%@@@@@#*+*%%:*::*:%%*+*#@@@@@%.
+($icon_colors.0)  =*#%%@@%*==:    :==*%@@%%#*=  
+($icon_colors.0)   :+****##*-      -*##****+:   
+($icon_colors.0)    =%@@%*-          -*%@@%=    
+($icon_colors.0)                                "
+
+realme: 
+$"($icon_colors.0)+*************+=.     
+($icon_colors.0)*#############%@@@#-  
+($icon_colors.0)                .+@@* 
+($icon_colors.0)                  .@@+
+($icon_colors.0)#@@@@@@@@@@@@*     *@%
+($icon_colors.0)%@#'''''''''''     %@*
+($icon_colors.0)#@*              -%@# 
+($icon_colors.0)#@*    -*******#@@%=  
+($icon_colors.0)#@*    *@@#*###*=:    
+($icon_colors.0)#@*    .*@#:          
+($icon_colors.0)#@*      :%@#:        
+($icon_colors.0)#@*        -@@*.      
+($icon_colors.0)#@*          =@@+     
+($icon_colors.0)#@*            +@@=   
+($icon_colors.0)%@#             .*@%- 
+($icon_colors.0)=+-               :+*:
+($icon_colors.0)                      "
 
     }
     if ($icon in $ascii_icons) {
@@ -182,8 +216,8 @@ def color_info [type] {
     echo $text
 }
 
-def show_info [ OS ] {
-    let colors = get_ascii_colors $OS
+def show_info [ OS display_icon show_icon_info ] {
+    let colors = get_ascii_colors $display_icon
     let info_list = {
         $"($colors.0)MFR   ": $"\e[0m($OS)"
         $"($colors.0)Version  ": $"\e[0m(version_info)"
@@ -207,82 +241,107 @@ def show_info [ OS ] {
     let terminal_list_str = $"($terminal_shell_list | table)"
     let all_info = $info_list_str + $hardware_list_str + $terminal_list_str
 
-    let icon = $"(get_ascii_icon $OS)"
+    let icon = $"(get_ascii_icon $display_icon)"
     let icon_lines = ($icon | split row "\n")
     let info_lines = ($all_info | split row "\n")
     let max_lines = ([($icon_lines | length), ($info_lines | length)] | math max)
-
-    let padded_icon = (
-        $icon_lines
-        | append (
-            1..($max_lines - ($icon_lines | length)) | each {|| 
-                $icon_lines | last
-            }
-        )
-    )
-
-    let padded_info = (
-        $info_lines
-        | append (
-            1..($max_lines - ($info_lines | length)) | each {|| 
-                ""
-            }
-        )
-    )
-
-    let icon_temp = (mktemp -t "icon.XXXXXX")
-    let info_temp = (mktemp -t "info.XXXXXX")
-    let icon_last_line = ($icon_lines | last)
-
-    let max_lines = ([($icon_lines | length), ($info_lines | length)] | math max)
-    let padded_icon = (
-        $icon_lines
-        | append (
-            1..($max_lines - ($icon_lines | length)) | each {|| 
-                $icon_last_line
-            }
-        )
-    )
-    let padded_info = (
-        $info_lines
-        | append (
-            1..($max_lines - ($info_lines | length)) | each {|| 
-                ""
-            }
-        )
-    )
-
-    let icon_width = (
-        $icon_last_line 
-        | str replace -a '\e\[[\d;]*m' ''
-        | str length
-    )
-
-    $padded_icon | str join "\n" | save $icon_temp --raw -f
-    $padded_info | str join "\n" | save $info_temp --raw -f
-
-    awk -v w=$icon_width '
-    NR==FNR {
-        icon[FNR]=$0
-        next
-    }
-    {
-        printf "%-*s\033[0m %s\n", w, icon[FNR], $0
-    }
-    ' $icon_temp $info_temp
-
-    rm -f $icon_temp $info_temp
     
+    if $show_icon_info.icon and $show_icon_info.info {
+        let padded_icon = (
+            $icon_lines
+            | append (
+                1..($max_lines - ($icon_lines | length)) | each {|| 
+                    $icon_lines | last
+                }
+            )
+        )
+    
+        let padded_info = (
+            $info_lines
+            | append (
+                1..($max_lines - ($info_lines | length)) | each {|| 
+                    ""
+                }
+            )
+        )
+    
+        let icon_temp = (mktemp -t "icon.XXXXXX")
+        let info_temp = (mktemp -t "info.XXXXXX")
+        let icon_last_line = ($icon_lines | last)
+    
+        let max_lines = ([($icon_lines | length), ($info_lines | length)] | math max)
+    
+        let padded_icon = (
+            $icon_lines
+            | append (
+                1..($max_lines - ($icon_lines | length)) | each {|| 
+                    $icon_last_line
+                }
+            )
+        )
+    
+        let padded_info = (
+            $info_lines
+            | append (
+                1..($max_lines - ($info_lines | length)) | each {|| 
+                    ""
+                }
+            )
+        )
+    
+        let icon_width = (
+            $icon_last_line 
+            | str replace -a '\e\[[\d;]*m' ''
+            | str length
+        )
+    
+        $padded_icon | str join "\n" | save $icon_temp --raw -f
+        $padded_info | str join "\n" | save $info_temp --raw -f
+    
+        awk -v w=$icon_width '
+        NR==FNR {
+            icon[FNR]=$0
+            next
+        }
+        {
+            printf "%-*s\033[0m %s\n", w, icon[FNR], $0
+        }
+        ' $icon_temp $info_temp
+    
+        rm -f $icon_temp $info_temp
+    } else if $show_icon_info.icon {
+        echo $icon
+    } else if $show_icon_info.info {
+        echo $all_info
+    } else {
+        echo ""
+    }
 }
 
 def main [
-    --mfr: string
+    --icon: string
+    --hide_icon
+    --hide_info
 ] {
-    mut display_os = (getprop ro.product.manufacturer)
+    let mfr = (getprop ro.product.manufacturer)
+    mut display_icon = $mfr
 
-    if $mfr != null {
-        $display_os = $mfr
+    if $icon != null {
+        $display_icon = $icon
+    }
+    
+    mut show_icon_info = {
+        icon: true
+        info: true
     }
 
-    show_info $display_os
+    if $hide_icon {
+        $show_icon_info.icon = false
+    }
+
+    if $hide_info {
+        $show_icon_info.info = false
+    }
+
+    show_info $mfr $display_icon $show_icon_info
 }
