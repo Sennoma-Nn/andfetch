@@ -1,28 +1,32 @@
 #!/data/data/com.termux/files/usr/bin/env nu
 
 def get_ascii_colors [ icon ] {
+	let icon_key = $icon  | str downcase
+
     let colors = {
-        OnePlus: ["\e[31m", "", "", ""]
-        Xiaomi: ["\e[38;2;255;103;0m", "", "", ""]
-        OPPO: ["\e[32m", "", "", ""]
-        Google: ["\e[31m", "\e[33m", "\e[32m", "\e[34m"]
+        oneplus: ["\e[31m", "", "", ""]
+        xiaomi: ["\e[38;2;255;103;0m", "", "", ""]
+        redmi: ["\e[38;2;255;103;0m", "", "", ""]
+        oppo: ["\e[32m", "", "", ""]
+        google: ["\e[31m", "\e[33m", "\e[32m", "\e[34m"]
         vivo: ["\e[34m", "\e[37m", "", ""]
-        Huawei: ["\e[31m", "", "", ""]
+        huawei: ["\e[31m", "", "", ""]
         realme: ["\e[33m", "", "", ""]
     }
 
-    if ($icon in $colors) {
-        echo $colors | get $icon
+    if ($icon_key in $colors) {
+        echo $colors | get $icon_key
     } else {
         echo ["\e[0m", "", "", ""]
     }
 }
 
 def get_ascii_icon [ icon ] {
-    let icon_colors = get_ascii_colors $icon
+	let icon_key = $icon  | str downcase
+    let icon_colors = get_ascii_colors $icon_key
     let ascii_icons = {
 
-OnePlus: 
+oneplus: 
 $"($icon_colors.0)                      ██    
 ($icon_colors.0)                      ██    
 ($icon_colors.0)████████████████  ██████████
@@ -39,7 +43,7 @@ $"($icon_colors.0)                      ██
 ($icon_colors.0)████████████████████████    
 ($icon_colors.0)                            "
 
-Xiaomi: 
+xiaomi: 
 $"($icon_colors.0) .llllllllllllllllllllllllllllllll. 
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
@@ -60,7 +64,28 @@ $"($icon_colors.0) .llllllllllllllllllllllllllllllll.
 ($icon_colors.0) 'llllllllllllllllllllllllllllllll' 
 ($icon_colors.0)                                    "
 
-OPPO: 
+redmi: 
+$"($icon_colors.0) .llllllllllllllllllllllllllllllll. 
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)lllllll              'lll    lllllll
+($icon_colors.0)lllllll    lllllll.    ll    lllllll
+($icon_colors.0)lllllll    ll    ll    ll    lllllll
+($icon_colors.0)lllllll    ll    ll    ll    lllllll
+($icon_colors.0)lllllll    ll    ll    ll    lllllll
+($icon_colors.0)lllllll    ll    ll    ll    lllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0)llllllllllllllllllllllllllllllllllll
+($icon_colors.0) 'llllllllllllllllllllllllllllllll' 
+($icon_colors.0)                                    "
+
+oppo: 
 $"($icon_colors.0)      .:~!7?JJ??7~^.      
 ($icon_colors.0)   :!YPGBBGGPPGGGBBG57^   
 ($icon_colors.0) .?GBBP?~^'    ':~7YGBGY^ 
@@ -73,7 +98,7 @@ $"($icon_colors.0)      .:~!7?JJ??7~^.
 ($icon_colors.0)      .^!7JJYYJJ?!~:      
 ($icon_colors.0)                          "
 
-Google: 
+google: 
 $"($icon_colors.0)             ......            
 ($icon_colors.0)        .:-==========-:.       
 ($icon_colors.0)     .-==================:     
@@ -112,7 +137,7 @@ $"($icon_colors.0) .--========================--.
 ($icon_colors.0) .--========================--. 
 ($icon_colors.0)                                "
 
-Huawei: 
+huawei: 
 $"($icon_colors.0)          :+*#.  .#*+:          
 ($icon_colors.0)         *@@@@#  #@@@@*         
 ($icon_colors.0)    =+  :@@@@@@..@@@@@@:  +=    
@@ -147,11 +172,16 @@ $"($icon_colors.0)+*************+=.
 ($icon_colors.0)                      "
 
     }
-    if ($icon in $ascii_icons) {
-        echo $ascii_icons | get $icon
+    if ($icon_key in $ascii_icons) {
+        echo $ascii_icons | get $icon_key
     } else {
         echo ""
     }
+}
+
+def mfr_info [] {
+	let mfr = (getprop ro.product.manufacturer)
+	echo $mfr
 }
 
 def rooted_info [] {
@@ -172,6 +202,11 @@ def rooted_info [] {
     }
 }
 
+def host_name_info [] {
+	let host_name = (sys host | get "name")
+	echo $host_name
+}
+
 def kernel_info [] {
     let kernel_release = (uname | get "kernel-release")
     echo $kernel_release
@@ -181,8 +216,13 @@ def version_info [] {
     echo $"Android (getprop ro.build.version.release) \((getprop ro.build.version.security_patch)\)"
 }
 
+def machine_info [] {
+    let machine = (uname | get "machine")
+    echo $machine
+}
+
 def cpu_info [] {
-    let cpu = (open /proc/cpuinfo | lines | where $it =~ 'Hardware' | split column ': ' | get column2 | uniq | str join ', ')
+    let cpu = (open /proc/cpuinfo | lines | where $it =~ 'Hardware' | split column ': ' | get "column2" | uniq | str join ', ')
     if $cpu == "" {
         echo "\e[2mUndetectable\e[0m"
     } else {
@@ -216,16 +256,30 @@ def color_info [type] {
     echo $text
 }
 
-def show_info [ OS display_icon show_icon_info ] {
+def show_info [ brand display_icon show_icon_info ] {
     let colors = get_ascii_colors $display_icon
+    
+    let brand_mfr_info = if $brand == $"(mfr_info)" {
+	    echo {
+		    $"($colors.0)Brand&MFR": $"\e[0m($brand)"
+	    }
+    } else {
+	    echo {
+		    $"($colors.0)Brand    ": $"\e[0m($brand)"
+            $"($colors.0)MFR      ": $"\e[0m(mfr_info)"
+	    }
+    }
+    
     let info_list = {
-        $"($colors.0)MFR   ": $"\e[0m($OS)"
+        ...$brand_mfr_info
+        $"($colors.0)Host     ": $"\e[0m(host_name_info)"
         $"($colors.0)Version  ": $"\e[0m(version_info)"
         $"($colors.0)Kernel   ": $"\e[0m(kernel_info)"
         $"($colors.0)Root     ": $"\e[0m(rooted_info)"
     }
 
     let hardware_list = {
+	    $"($colors.0)Machine  ": $"\e[0m(machine_info)"
         $"($colors.0)CPU Model": $"\e[0m(cpu_info)"
         $"($colors.0)Memory   ": $"\e[0m(memory_info)"
     }
@@ -323,8 +377,15 @@ def main [
     --hide_icon
     --hide_info
 ] {
-    let mfr = (getprop ro.product.manufacturer)
-    mut display_icon = $mfr
+	let os_name = $nu.os-info.name
+	if (uname | get "operating-system") != "Android" {
+		error make -u {
+            msg: "This script is only allowed to run on Android."
+        }
+	}
+	
+    let brand = (getprop ro.product.brand)
+    mut display_icon = $brand
 
     if $icon != null {
         $display_icon = $icon
@@ -343,5 +404,5 @@ def main [
         $show_icon_info.info = false
     }
 
-    show_info $mfr $display_icon $show_icon_info
+    show_info $brand $display_icon $show_icon_info
 }
