@@ -86,55 +86,55 @@ $"($icon_colors.0) .llllllllllllllllllllllllllllllll.
 ($icon_colors.0)                                    "
 
 oppo: 
-$"($icon_colors.0)      .:~!7?JJ??7~^.      
-($icon_colors.0)   :!YPGBBGGPPGGGBBG57^   
-($icon_colors.0) .?GBBP?~^'    ':~7YGBGY^ 
-($icon_colors.0).5BBG!              :5BBG~
-($icon_colors.0)7BGB!                .GGB5
-($icon_colors.0)?BGB~                .PGB5
-($icon_colors.0):PBBP~              :YBBG~
-($icon_colors.0) .JGBB57^:.    ..^!JGBB5~ 
-($icon_colors.0)   :7YGBBGGPPPPPGBBG5?~   
-($icon_colors.0)      .^!7JJYYJJ?!~:      
+$"($icon_colors.0)      .~:!7?JJ??79~.      
+($icon_colors.0)   .QYPGBBGGPPGGGBBG5P.   
+($icon_colors.0) .?GBBP?~'      '~7YGBGY. 
+($icon_colors.0)~5BBG~              ~5BBG~
+($icon_colors.0)6BGB~                ~GGB5
+($icon_colors.0)6BGB~                ~PGB5
+($icon_colors.0)~PBBP~              ~YBBG~
+($icon_colors.0) 'JGBB57~.      .~!JGBB5' 
+($icon_colors.0)   '7YGBBGGPPPPPGBBG5?'   
+($icon_colors.0)      '~!7JJYYJJ?!~'      
 ($icon_colors.0)                          "
 
 google: 
 $"($icon_colors.0)             ......            
 ($icon_colors.0)        .:-==========-:.       
-($icon_colors.0)     .-==================:     
-($icon_colors.0)   .-===================:.     
-($icon_colors.1)  :($icon_colors.0)=======-:.      ($icon_colors.0).:-:        
-($icon_colors.1) -*+($icon_colors.0)====-.                     
-($icon_colors.1).####($icon_colors.0)*+-                       
+($icon_colors.1)     .($icon_colors.0)-==================:     
+($icon_colors.1)   .-===($icon_colors.0)================:'     
+($icon_colors.1)  :=======($icon_colors.0)-:'      .:-:        
+($icon_colors.1) -#+====-'                     
+($icon_colors.1).####*+-                       
 ($icon_colors.1)-######         ($icon_colors.3)==============-
 ($icon_colors.1)=#####+         ($icon_colors.3)=+++++++++++++=
 ($icon_colors.1)-######         ($icon_colors.3)=============+-
-($icon_colors.1).####($icon_colors.2)*+-               ($icon_colors.3).=+===+:
-($icon_colors.1) -#+($icon_colors.2)===+=.             ($icon_colors.3)-+===+= 
-($icon_colors.2)  :=+===++-:.      ($icon_colors.3).:-=+===+=  
-($icon_colors.2)   .-++====++=======++($icon_colors.3)===++-   
-($icon_colors.2)     .-=+++==========+++=($icon_colors.3)-.    
-($icon_colors.2)        .:-==========-:.       
-($icon_colors.2)             ......            
+($icon_colors.1).####*+-               ($icon_colors.3).=+===+:
+($icon_colors.1) -#+===+=.             ($icon_colors.3)-+===+= 
+($icon_colors.1)  :=+===++($icon_colors.2)-:.      .:-($icon_colors.3)=+===+=  
+($icon_colors.1)   '-++=($icon_colors.2)===++======++===($icon_colors.3)=++-   
+($icon_colors.1)     '($icon_colors.2)-=+++==========+++=-($icon_colors.3)'    
+($icon_colors.2)        ':-==========-:'       
+($icon_colors.2)             ''''''            
 ($icon_colors.2)                               "
 
 vivo: 
 $"($icon_colors.0) .--========================--. 
 ($icon_colors.0):==============================:
 ($icon_colors.0)-==============================-
-($icon_colors.0)-===---==================---===-
-($icon_colors.0)-=======-==============-=======-
-($icon_colors.0)-===($icon_colors.1)#@@@#($icon_colors.0)--==========--($icon_colors.1)#@@@#($icon_colors.0)===-
-($icon_colors.0)-==-=($icon_colors.1)#@@@%=($icon_colors.0)-========-($icon_colors.1)=%@@@#($icon_colors.0)=-==-
-($icon_colors.0)-===--($icon_colors.1)*@@@@+($icon_colors.0)-======-($icon_colors.1)+@@@@*($icon_colors.0)--===-
+($icon_colors.0)-==============================-
+($icon_colors.0)-==============================-
+($icon_colors.0)-==-($icon_colors.1)#@@@#($icon_colors.0)--==========--($icon_colors.1)#@@@#($icon_colors.0)-==-
+($icon_colors.0)-===-($icon_colors.1)#@@@%-($icon_colors.0)-========-($icon_colors.1)-%@@@#($icon_colors.0)-===-
+($icon_colors.0)-====-($icon_colors.1)*@@@@+($icon_colors.0)-======-($icon_colors.1)+@@@@*($icon_colors.0)-====-
 ($icon_colors.0)-=====-($icon_colors.1)+@@@@*($icon_colors.0)-====-($icon_colors.1)*@@@@+($icon_colors.0)-=====-
-($icon_colors.0)-======-($icon_colors.1)=%@@@#($icon_colors.0)----($icon_colors.1)#@@@%=($icon_colors.0)-======-
+($icon_colors.0)-======-($icon_colors.1)-%@@@#($icon_colors.0)----($icon_colors.1)#@@@%-($icon_colors.0)-======-
 ($icon_colors.0)-=======--($icon_colors.1)#@@@%==%@@@#($icon_colors.0)--=======-
 ($icon_colors.0)-=========-($icon_colors.1)*@@@@@@@@*($icon_colors.0)-=========-
-($icon_colors.0)-==========-($icon_colors.1)=#%@@%#=($icon_colors.0)-==========-
-($icon_colors.0)-===========--====--===========-
+($icon_colors.0)-==========-($icon_colors.1)-#%@@%#-($icon_colors.0)-==========-
+($icon_colors.0)-==============================-
 ($icon_colors.0):==============================:
-($icon_colors.0) .--========================--. 
+($icon_colors.0) '--========================--' 
 ($icon_colors.0)                                "
 
 huawei: 
@@ -146,7 +146,7 @@ $"($icon_colors.0)          :+*#.  .#*+:
 ($icon_colors.0)  .@@@@@@+-@@@@==@@@@-+@@@@@@.  
 ($icon_colors.0)=+::+%@@@@*-@@@==@@@-*@@@@%+::+=
 ($icon_colors.0)#@@%*=+*%@@%-#@--@#-%@@%*+=*%@@#
-($icon_colors.0).%@@@@@#*+*%%:*::*:%%*+*#@@@@@%.
+($icon_colors.0)'%@@@@@#*+*%%:*::*:%%*+*#@@@@@%'
 ($icon_colors.0)  =*#%%@@%*==:    :==*%@@%%#*=  
 ($icon_colors.0)   :+****##*-      -*##****+:   
 ($icon_colors.0)    =%@@%*-          -*%@@%=    
@@ -158,10 +158,10 @@ $"($icon_colors.0)+*************+=.
 ($icon_colors.0)                .+@@* 
 ($icon_colors.0)                  .@@+
 ($icon_colors.0)#@@@@@@@@@@@@*     *@%
-($icon_colors.0)%@#'''''''''''     %@*
+($icon_colors.0)%@###########-     %@*
 ($icon_colors.0)#@*              -%@# 
 ($icon_colors.0)#@*    -*******#@@%=  
-($icon_colors.0)#@*    *@@#*###*=:    
+($icon_colors.0)#@*    *@@#*###*='    
 ($icon_colors.0)#@*    .*@#:          
 ($icon_colors.0)#@*      :%@#:        
 ($icon_colors.0)#@*        -@@*.      
