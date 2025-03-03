@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/env nu
 
 def get_ascii_colors [ icon ] {
-	let icon_key = $icon  | str downcase
+    let icon_key = $icon  | str downcase
 
     let colors = {
         oneplus: ["\e[31m", "", "", ""]
@@ -22,7 +22,7 @@ def get_ascii_colors [ icon ] {
 }
 
 def get_ascii_icon [ icon ] {
-	let icon_key = $icon  | str downcase
+    let icon_key = $icon  | str downcase
     let icon_colors = get_ascii_colors $icon_key
     let ascii_icons = {
 
@@ -41,7 +41,7 @@ $"($icon_colors.0)                      ██
 ($icon_colors.0)██                    ██    
 ($icon_colors.0)██                    ██    
 ($icon_colors.0)████████████████████████    
-($icon_colors.0)                            "
+\e[0m                            "
 
 xiaomi: 
 $"($icon_colors.0) .llllllllllllllllllllllllllllllll. 
@@ -62,7 +62,7 @@ $"($icon_colors.0) .llllllllllllllllllllllllllllllll.
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0) 'llllllllllllllllllllllllllllllll' 
-($icon_colors.0)                                    "
+\e[0m                                    "
 
 redmi: 
 $"($icon_colors.0) .llllllllllllllllllllllllllllllll. 
@@ -83,7 +83,7 @@ $"($icon_colors.0) .llllllllllllllllllllllllllllllll.
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0) 'llllllllllllllllllllllllllllllll' 
-($icon_colors.0)                                    "
+\e[0m                                    "
 
 oppo: 
 $"($icon_colors.0)      .~:!7?JJ??79~.      
@@ -96,7 +96,7 @@ $"($icon_colors.0)      .~:!7?JJ??79~.
 ($icon_colors.0) 'JGBB57~.      .~!JGBB5' 
 ($icon_colors.0)   '7YGBBGGPPPPPGBBG5?'   
 ($icon_colors.0)      '~!7JJYYJJ?!~'      
-($icon_colors.0)                          "
+\e[0m                          "
 
 google: 
 $"($icon_colors.0)             ......            
@@ -116,7 +116,7 @@ $"($icon_colors.0)             ......
 ($icon_colors.1)     '($icon_colors.2)-=+++==========+++=-($icon_colors.3)'    
 ($icon_colors.2)        ':-==========-:'       
 ($icon_colors.2)             ''''''            
-($icon_colors.2)                               "
+\e[0m                               "
 
 vivo: 
 $"($icon_colors.0) .--========================--. 
@@ -135,7 +135,7 @@ $"($icon_colors.0) .--========================--.
 ($icon_colors.0)-==============================-
 ($icon_colors.0):==============================:
 ($icon_colors.0) '--========================--' 
-($icon_colors.0)                                "
+\e[0m                                "
 
 huawei: 
 $"($icon_colors.0)          :+*#.  .#*+:          
@@ -150,7 +150,7 @@ $"($icon_colors.0)          :+*#.  .#*+:
 ($icon_colors.0)  =*#%%@@%*==:    :==*%@@%%#*=  
 ($icon_colors.0)   :+****##*-      -*##****+:   
 ($icon_colors.0)    =%@@%*-          -*%@@%=    
-($icon_colors.0)                                "
+\e[0m                                "
 
 realme: 
 $"($icon_colors.0)+*************+=.     
@@ -169,7 +169,7 @@ $"($icon_colors.0)+*************+=.
 ($icon_colors.0)#@*            +@@=   
 ($icon_colors.0)%@#             .*@%- 
 ($icon_colors.0)=+-               :+*:
-($icon_colors.0)                      "
+\e[0m                      "
 
     }
     if ($icon_key in $ascii_icons) {
@@ -180,8 +180,8 @@ $"($icon_colors.0)+*************+=.
 }
 
 def mfr_info [] {
-	let mfr = (getprop ro.product.manufacturer)
-	echo $mfr
+    let mfr = (getprop ro.product.manufacturer)
+    echo $mfr
 }
 
 def rooted_info [] {
@@ -203,8 +203,8 @@ def rooted_info [] {
 }
 
 def host_name_info [] {
-	let host_name = (sys host | get "name")
-	echo $host_name
+    let host_name = (sys host | get "name")
+    echo $host_name
 }
 
 def kernel_info [] {
@@ -256,117 +256,170 @@ def color_info [type] {
     echo $text
 }
 
-def show_info [ brand display_icon show_icon_info ] {
+def show_info [ brand display_icon show_icon_info json ] {
     let colors = get_ascii_colors $display_icon
     
     let brand_mfr_info = if $brand == $"(mfr_info)" {
-	    echo {
-		    $"($colors.0)Brand&MFR": $"\e[0m($brand)"
-	    }
+        echo {
+            $"($colors.0)Brand&MFR": $"\e[0m($brand)"
+        }
     } else {
-	    echo {
-		    $"($colors.0)Brand    ": $"\e[0m($brand)"
+        echo {
+            $"($colors.0)Brand    ": $"\e[0m($brand)"
             $"($colors.0)MFR      ": $"\e[0m(mfr_info)"
-	    }
+        }
     }
     
-    let info_list = {
-        ...$brand_mfr_info
-        $"($colors.0)Host     ": $"\e[0m(host_name_info)"
-        $"($colors.0)Version  ": $"\e[0m(version_info)"
-        $"($colors.0)Kernel   ": $"\e[0m(kernel_info)"
-        $"($colors.0)Root     ": $"\e[0m(rooted_info)"
+    let info_list = if $json != true {
+        echo {
+            ...$brand_mfr_info
+            $"($colors.0)Host     ": $"\e[0m(host_name_info)"
+            $"($colors.0)Version  ": $"\e[0m(version_info)"
+            $"($colors.0)Kernel   ": $"\e[0m(kernel_info)"
+            $"($colors.0)Root     ": $"\e[0m(rooted_info)"
+        }
+    } else {
+        echo {
+            $"brand":   $"($brand)"
+            $"mfr":     $"(mfr_info)"
+            $"host":    $"(host_name_info)"
+            $"version": $"(version_info)"
+            $"kernel":  $"(kernel_info)"
+            $"root":    $"(rooted_info)"
+        }
     }
 
-    let hardware_list = {
-	    $"($colors.0)Machine  ": $"\e[0m(machine_info)"
-        $"($colors.0)CPU Model": $"\e[0m(cpu_info)"
-        $"($colors.0)Memory   ": $"\e[0m(memory_info)"
+    let hardware_list = if $json != true {
+        echo {
+            $"($colors.0)Machine  ": $"\e[0m(machine_info)"
+            $"($colors.0)CPU Model": $"\e[0m(cpu_info)"
+            $"($colors.0)Memory   ": $"\e[0m(memory_info)"
+        }
+    } else {
+        echo {
+            $"machine":   $"(machine_info)"
+            $"cpu-model": $"(cpu_info)"
+            $"memory":    $"(memory_info)"
+        }
     }
     
-    let terminal_shell_list = {
-        $"($colors.0)Shell    ": $"\e[0m(get_shell)"
-        $"($colors.0)Color    ": $"(color_info 'normal')"
-        $"($colors.0)Bright   ": $"(color_info 'bright')"
+    let terminal_shell_list = if $json != true {
+        echo {
+            $"($colors.0)Shell    ": $"\e[0m(get_shell)"
+            $"($colors.0)Color    ": $"(color_info 'normal')"
+            $"($colors.0)Bright   ": $"(color_info 'bright')"
+        }
+    } else {
+        echo {
+            $"shell":  $"(get_shell)"
+            # $"color":  $"(color_info 'normal')"
+            # $"bright": $"(color_info 'bright')"
+        }
     }
-
+    
+    let icon = $"(get_ascii_icon $display_icon)"
     let info_list_str = $"($info_list | table)" + "\n"
     let hardware_list_str = $"($hardware_list | table)" + "\n"
     let terminal_list_str = $"($terminal_shell_list | table)"
-    let all_info = $info_list_str + $hardware_list_str + $terminal_list_str
-
-    let icon = $"(get_ascii_icon $display_icon)"
-    let icon_lines = ($icon | split row "\n")
-    let info_lines = ($all_info | split row "\n")
-    let max_lines = ([($icon_lines | length), ($info_lines | length)] | math max)
+    let all_info = if $json != true {
+        echo ($info_list_str + $hardware_list_str + $terminal_list_str)
+    } else {
+        let info_table = {
+            "base":           $info_list
+            "hardware":       $hardware_list
+            "terminal-shell": $terminal_shell_list
+        }
+        echo $info_table
+    }
     
     if $show_icon_info.icon and $show_icon_info.info {
-        let padded_icon = (
-            $icon_lines
-            | append (
-                1..($max_lines - ($icon_lines | length)) | each {|| 
-                    $icon_lines | last
-                }
+        if $json != true {
+            let icon_lines = ($icon | split row "\n")
+            let info_lines = ($all_info | split row "\n")
+            let max_lines = ([($icon_lines | length), ($info_lines | length)] | math max)
+
+            let padded_icon = (
+                $icon_lines
+                | append (
+                    1..($max_lines - ($icon_lines | length)) | each {|| 
+                        $icon_lines | last
+                    }
+                )
             )
-        )
-    
-        let padded_info = (
-            $info_lines
-            | append (
-                1..($max_lines - ($info_lines | length)) | each {|| 
-                    ""
-                }
+        
+            let padded_info = (
+                $info_lines
+                | append (
+                    1..($max_lines - ($info_lines | length)) | each {|| 
+                        ""
+                    }
+                )
             )
-        )
-    
-        let icon_temp = (mktemp -t "icon.XXXXXX")
-        let info_temp = (mktemp -t "info.XXXXXX")
-        let icon_last_line = ($icon_lines | last)
-    
-        let max_lines = ([($icon_lines | length), ($info_lines | length)] | math max)
-    
-        let padded_icon = (
-            $icon_lines
-            | append (
-                1..($max_lines - ($icon_lines | length)) | each {|| 
-                    $icon_last_line
-                }
+        
+            let icon_temp = (mktemp -t "icon.XXXXXX")
+            let info_temp = (mktemp -t "info.XXXXXX")
+            let icon_last_line = ($icon_lines | last)
+        
+            let max_lines = ([($icon_lines | length), ($info_lines | length)] | math max)
+        
+            let padded_icon = (
+                $icon_lines
+                | append (
+                    1..($max_lines - ($icon_lines | length)) | each {|| 
+                        $icon_last_line
+                    }
+                )
             )
-        )
-    
-        let padded_info = (
-            $info_lines
-            | append (
-                1..($max_lines - ($info_lines | length)) | each {|| 
-                    ""
-                }
+        
+            let padded_info = (
+                $info_lines
+                | append (
+                    1..($max_lines - ($info_lines | length)) | each {|| 
+                        ""
+                    }
+                )
             )
-        )
-    
-        let icon_width = (
-            $icon_last_line 
-            | str replace -a '\e\[[\d;]*m' ''
-            | str length
-        )
-    
-        $padded_icon | str join "\n" | save $icon_temp --raw -f
-        $padded_info | str join "\n" | save $info_temp --raw -f
-    
-        awk -v w=$icon_width '
-        NR==FNR {
-            icon[FNR]=$0
-            next
+        
+            let icon_width = (
+                $icon_last_line 
+                | str replace -a '\e\[[\d;]*m' ''
+                | str length
+            )
+        
+            $padded_icon | str join "\n" | save $icon_temp --raw -f
+            $padded_info | str join "\n" | save $info_temp --raw -f
+        
+            awk -v w=$icon_width '
+            NR==FNR {
+                icon[FNR]=$0
+                next
+            }
+            {
+                printf "%-*s\033[0m %s\n", w, icon[FNR], $0
+            }
+            ' $icon_temp $info_temp
+        
+            rm -f $icon_temp $info_temp
+        } else {
+            echo {
+                "icon": $icon
+                ...$all_info
+            } | to json
         }
-        {
-            printf "%-*s\033[0m %s\n", w, icon[FNR], $0
-        }
-        ' $icon_temp $info_temp
-    
-        rm -f $icon_temp $info_temp
     } else if $show_icon_info.icon {
-        echo $icon
+        if $json != true {
+            echo $icon
+        } else {
+            echo {
+                "icon": $icon
+            } | to json
+        }
     } else if $show_icon_info.info {
-        echo $all_info
+        if $json != true {
+            echo $all_info
+        } else {
+            echo $all_info | to json
+        }
     } else {
         echo ""
     }
@@ -376,14 +429,15 @@ def main [
     --icon: string
     --hide_icon
     --hide_info
+    --json
 ] {
-	let os_name = $nu.os-info.name
-	if (uname | get "operating-system") != "Android" {
-		error make -u {
+    let os_name = $nu.os-info.name
+    if (uname | get "operating-system") != "Android" {
+        error make -u {
             msg: "This script is only allowed to run on Android."
         }
-	}
-	
+    }
+    
     let brand = (getprop ro.product.brand)
     mut display_icon = $brand
 
@@ -404,5 +458,5 @@ def main [
         $show_icon_info.info = false
     }
 
-    show_info $brand $display_icon $show_icon_info
+    show_info $brand $display_icon $show_icon_info $json
 }
