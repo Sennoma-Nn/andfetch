@@ -346,6 +346,7 @@ def show_info [brand display_icon show_icon_info json] {
                 $output_lines += 1
             }
 
+            print -n "\n"
             $output_lines += 1
 
             for $i in 1..2 {
