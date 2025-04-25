@@ -8,7 +8,7 @@ def get_ascii_colors [ icon ] {
         xiaomi: ["\e[38;2;255;103;0m", "", "", ""]
         redmi: ["\e[38;2;255;103;0m", "", "", ""]
         oppo: ["\e[32m", "", "", ""]
-        google: ["\e[31m", "\e[33m", "\e[32m", "\e[34m"]
+        google: ["\e[34m", "\e[33m", "\e[32m", "\e[31m"]
         vivo: ["\e[34m", "\e[37m", "", ""]
         huawei: ["\e[31m", "", "", ""]
         realme: ["\e[33m", "", "", ""]
@@ -17,7 +17,7 @@ def get_ascii_colors [ icon ] {
     if ($icon_key in $colors) {
         echo $colors | get $icon_key
     } else {
-        echo ["\e[0m", "", "", ""]
+        echo ["\e[32m", "\e[37m", "", ""]
     }
 }
 
@@ -41,7 +41,7 @@ $"($icon_colors.0)                      ██
 ($icon_colors.0)██                    ██    
 ($icon_colors.0)██                    ██    
 ($icon_colors.0)████████████████████████    
-\e[0m                            "
+                            "
 
 xiaomi: 
 $"($icon_colors.0) .llllllllllllllllllllllllllllllll. 
@@ -62,7 +62,7 @@ $"($icon_colors.0) .llllllllllllllllllllllllllllllll.
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0) 'llllllllllllllllllllllllllllllll' 
-\e[0m                                    "
+                                    "
 
 redmi: 
 $"($icon_colors.0) .llllllllllllllllllllllllllllllll. 
@@ -83,7 +83,7 @@ $"($icon_colors.0) .llllllllllllllllllllllllllllllll.
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0) 'llllllllllllllllllllllllllllllll' 
-\e[0m                                    "
+                                    "
 
 oppo: 
 $"($icon_colors.0)      .~:!7?JJ??79~.      
@@ -96,27 +96,27 @@ $"($icon_colors.0)      .~:!7?JJ??79~.
 ($icon_colors.0) 'JGBB57~.      .~!JGBB5' 
 ($icon_colors.0)   '7YGBBGGPPPPPGBBG5?'   
 ($icon_colors.0)      '~!7JJYYJJ?!~'      
-\e[0m                          "
+                          "
 
 google: 
-$"($icon_colors.0)             ......            
-($icon_colors.0)        .:-==========-:.       
-($icon_colors.1)     .($icon_colors.0)-==================:     
-($icon_colors.1)   .-===($icon_colors.0)================:'     
-($icon_colors.1)  :=======($icon_colors.0)-:'      .:-:        
+$"($icon_colors.3)             ......            
+($icon_colors.3)        .:-==========-:.       
+($icon_colors.1)     .($icon_colors.3)-==================:     
+($icon_colors.1)   .-===($icon_colors.3)================:'     
+($icon_colors.1)  :=======($icon_colors.3)-:'      .:-:        
 ($icon_colors.1) -#+====-'                     
 ($icon_colors.1).####*+-                       
-($icon_colors.1)-######         ($icon_colors.3)==============-
-($icon_colors.1)=#####+         ($icon_colors.3)=+++++++++++++=
-($icon_colors.1)-######         ($icon_colors.3)=============+-
-($icon_colors.1).####*+-               ($icon_colors.3).=+===+:
-($icon_colors.1) -#+===+=.             ($icon_colors.3)-+===+= 
-($icon_colors.1)  :=+===++($icon_colors.2)-:.      .:-($icon_colors.3)=+===+=  
-($icon_colors.1)   '-++=($icon_colors.2)===++======++===($icon_colors.3)=++-   
-($icon_colors.1)     '($icon_colors.2)-=+++==========+++=-($icon_colors.3)'    
+($icon_colors.1)-######         ($icon_colors.0)==============-
+($icon_colors.1)=#####+         ($icon_colors.0)=+++++++++++++=
+($icon_colors.1)-######         ($icon_colors.0)=============+-
+($icon_colors.1).####*+-               ($icon_colors.0).=+===+:
+($icon_colors.1) -#+===+=.             ($icon_colors.0)-+===+= 
+($icon_colors.1)  :=+===++($icon_colors.2)-:.      .:-($icon_colors.0)=+===+=  
+($icon_colors.1)   '-++=($icon_colors.2)===++======++===($icon_colors.0)=++-   
+($icon_colors.1)     '($icon_colors.2)-=+++==========+++=-($icon_colors.0)'    
 ($icon_colors.2)        ':-==========-:'       
 ($icon_colors.2)             ''''''            
-\e[0m                               "
+                               "
 
 vivo: 
 $"($icon_colors.0) .--========================--. 
@@ -135,7 +135,7 @@ $"($icon_colors.0) .--========================--.
 ($icon_colors.0)-==============================-
 ($icon_colors.0):==============================:
 ($icon_colors.0) '--========================--' 
-\e[0m                                "
+                                "
 
 huawei: 
 $"($icon_colors.0)          :+*#.  .#*+:          
@@ -150,7 +150,7 @@ $"($icon_colors.0)          :+*#.  .#*+:
 ($icon_colors.0)  =*#%%@@%*==:    :==*%@@%%#*=  
 ($icon_colors.0)   :+****##*-      -*##****+:   
 ($icon_colors.0)    =%@@%*-          -*%@@%=    
-\e[0m                                "
+                                "
 
 realme: 
 $"($icon_colors.0)+*************+=.     
@@ -169,13 +169,34 @@ $"($icon_colors.0)+*************+=.
 ($icon_colors.0)#@*            +@@=   
 ($icon_colors.0)%@#             .*@%- 
 ($icon_colors.0)=+-               :+*:
-\e[0m                      "
+                      "
+
+android:
+$"($icon_colors.0)         -o          o-         
+($icon_colors.0)          +hydNNNNdyh+          
+($icon_colors.0)        +mMMMMMMMMMMMMm+        
+($icon_colors.0)      `dMM($icon_colors.1)m:($icon_colors.0)NMMMMMMN($icon_colors.1):m($icon_colors.0)MMd`      
+($icon_colors.0)      hMMMMMMMMMMMMMMMMMMh      
+($icon_colors.0)  ..  yyyyyyyyyyyyyyyyyyyy  ..  
+($icon_colors.0).mMMm`MMMMMMMMMMMMMMMMMMMM`mMMm.
+($icon_colors.0):MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
+($icon_colors.0):MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
+($icon_colors.0):MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
+($icon_colors.0):MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
+($icon_colors.0)-MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM-
+($icon_colors.0) +yy+ MMMMMMMMMMMMMMMMMMMM +yy+ 
+($icon_colors.0)      mMMMMMMMMMMMMMMMMMMm      
+($icon_colors.0)      `/++MMMMh++hMMMM++/`      
+($icon_colors.0)          MMMMo  oMMMM          
+($icon_colors.0)          MMMMo  oMMMM          
+($icon_colors.0)          oNMm-  -mMNs          
+                                "
 
     }
     if ($icon_key in $ascii_icons) {
         echo $ascii_icons | get $icon_key
     } else {
-        echo ""
+        echo $ascii_icons | get "android"
     }
 }
 
@@ -212,8 +233,12 @@ def kernel_info [] {
     echo $kernel_release
 }
 
-def version_info [] {
-    echo $"Android (getprop ro.build.version.release) \((getprop ro.build.version.security_patch)\)"
+def version_info [ --show_version --show_time ] {
+    mut output_str = ""
+    if $show_version { $output_str += $"Android (getprop ro.build.version.release)" }
+    if $show_version and $show_time { $output_str += " " }
+    if $show_time { $output_str += $"\((getprop ro.build.version.security_patch)\)" }
+    echo $output_str
 }
 
 def machine_info [] {
@@ -224,7 +249,7 @@ def machine_info [] {
 def cpu_info [] {
     let cpu = (open /proc/cpuinfo | lines | where $it =~ 'Hardware' | split column ': ' | get "column2" | uniq | str join ', ')
     if $cpu == "" {
-        echo "\e[2mUndetectable\e[0m"
+        echo "* Undetectable *"
     } else {
         echo $cpu
     }
@@ -235,193 +260,128 @@ def memory_info [] {
 }
 
 def get_shell [] {
-    let shell_path = $env.shell | split row "/"
+    mut shell = ($env | get "shell"? | default "/system/bin/sh") # $SHELL 可能不存在，默认 sh
+    let shell_path = $shell | split row "/"
     let path_len = $shell_path | length
-    
+
     echo $shell_path | last
 }
 
 def color_info [type] {
     mut text = ""
-    mut t = 3
+    mut t = 4
     if $type == "bright" {
-        $t = 9
+        $t = 10
     }
 
-    $text += " "
     for $j in 0..7 {
-        $text += $"\e[($t)($j)m•\e[0m "
+        $text += $"\e[($t)($j)m   \e[0m"
     }
 
     echo $text
 }
 
-def show_info [ brand display_icon show_icon_info json ] {
+def show_info [brand display_icon show_icon_info json] {
     let colors = get_ascii_colors $display_icon
-    
-    let brand_mfr_info = if $brand == $"(mfr_info)" {
-        echo {
-            $"($colors.0)Brand&MFR": $"\e[0m($brand)"
-        }
-    } else {
-        echo {
-            $"($colors.0)Brand    ": $"\e[0m($brand)"
-            $"($colors.0)MFR      ": $"\e[0m(mfr_info)"
-        }
-    }
-    
-    let info_list = if $json != true {
-        echo {
-            ...$brand_mfr_info
-            $"($colors.0)Host     ": $"\e[0m(host_name_info)"
-            $"($colors.0)Version  ": $"\e[0m(version_info)"
-            $"($colors.0)Kernel   ": $"\e[0m(kernel_info)"
-            $"($colors.0)Root     ": $"\e[0m(rooted_info)"
-        }
-    } else {
-        echo {
-            $"brand":   $"($brand)"
-            $"mfr":     $"(mfr_info)"
-            $"host":    $"(host_name_info)"
-            $"version": $"(version_info)"
-            $"kernel":  $"(kernel_info)"
-            $"root":    $"(rooted_info)"
-        }
-    }
-
-    let hardware_list = if $json != true {
-        echo {
-            $"($colors.0)Machine  ": $"\e[0m(machine_info)"
-            $"($colors.0)CPU Model": $"\e[0m(cpu_info)"
-            $"($colors.0)Memory   ": $"\e[0m(memory_info)"
-        }
-    } else {
-        echo {
-            $"machine":   $"(machine_info)"
-            $"cpu-model": $"(cpu_info)"
-            $"memory":    $"(memory_info)"
-        }
-    }
-    
-    let terminal_shell_list = if $json != true {
-        echo {
-            $"($colors.0)Shell    ": $"\e[0m(get_shell)"
-            $"($colors.0)Color    ": $"(color_info 'normal')"
-            $"($colors.0)Bright   ": $"(color_info 'bright')"
-        }
-    } else {
-        echo {
-            $"shell":  $"(get_shell)"
-            # $"color":  $"(color_info 'normal')"
-            # $"bright": $"(color_info 'bright')"
-        }
-    }
-    
     let icon = $"(get_ascii_icon $display_icon)"
-    let info_list_str = $"($info_list | table)" + "\n"
-    let hardware_list_str = $"($hardware_list | table)" + "\n"
-    let terminal_list_str = $"($terminal_shell_list | table)"
-    let all_info = if $json != true {
-        echo ($info_list_str + $hardware_list_str + $terminal_list_str)
-    } else {
-        let info_table = {
-            "base":           $info_list
-            "hardware":       $hardware_list
-            "terminal-shell": $terminal_shell_list
-        }
-        echo $info_table
+    let info_list = {
+        Brand: $brand
+        Mfr: (mfr_info)
+        Host: (host_name_info)
+        Version: (version_info --show_version --show_time)
+        Rernel: (kernel_info)
+        Rooted: (rooted_info)
+        Machine: (machine_info)
+        "CPU Model": (cpu_info)
+        Memory: (memory_info)
+        Shell: (get_shell)
     }
-    
-    if $show_icon_info.icon and $show_icon_info.info {
-        if $json != true {
-            let icon_lines = ($icon | split row "\n")
-            let info_lines = ($all_info | split row "\n")
-            let max_lines = ([($icon_lines | length), ($info_lines | length)] | math max)
 
-            let padded_icon = (
-                $icon_lines
-                | append (
-                    1..($max_lines - ($icon_lines | length)) | each {|| 
-                        $icon_lines | last
-                    }
-                )
-            )
+    if $json == false {
+        mut icon_len = ($icon | split row "\n" | length)
+        mut icon_wid = ($icon | split row "\n" | last | str length)
+        mut space = 4
         
-            let padded_info = (
-                $info_lines
-                | append (
-                    1..($max_lines - ($info_lines | length)) | each {|| 
-                        ""
-                    }
-                )
-            )
-        
-            let icon_temp = (mktemp -t "icon.XXXXXX")
-            let info_temp = (mktemp -t "info.XXXXXX")
-            let icon_last_line = ($icon_lines | last)
-        
-            let max_lines = ([($icon_lines | length), ($info_lines | length)] | math max)
-        
-            let padded_icon = (
-                $icon_lines
-                | append (
-                    1..($max_lines - ($icon_lines | length)) | each {|| 
-                        $icon_last_line
-                    }
-                )
-            )
-        
-            let padded_info = (
-                $info_lines
-                | append (
-                    1..($max_lines - ($info_lines | length)) | each {|| 
-                        ""
-                    }
-                )
-            )
-        
-            let icon_width = (
-                $icon_last_line 
-                | str replace -a '\e\[[\d;]*m' ''
-                | str length
-            )
-        
-            $padded_icon | str join "\n" | save $icon_temp --raw -f
-            $padded_info | str join "\n" | save $info_temp --raw -f
-        
-            awk -v w=$icon_width '
-            NR==FNR {
-                icon[FNR]=$0
-                next
+        if $show_icon_info.icon {
+            for _ in 1..$icon_len {
+                print -n "\n" # 为终端空出位置，如果提示符在终端底下会导致绘制重叠
             }
-            {
-                printf "%-*s\033[0m %s\n", w, icon[FNR], $0
-            }
-            ' $icon_temp $info_temp
+
+            print -n $"\e[($icon_len)A"
+        } else {
+            $icon_len = 0
+            $icon_wid = 0
+            $space = 0
+        }
+
+        print -n $"\e[s"
         
-            rm -f $icon_temp $info_temp
-        } else {
-            echo {
-                "icon": $icon
-                ...$all_info
-            } | to json
+        if $show_icon_info.icon {
+            print -n $"\e[u"
+            print -n $icon
+            print -n "\n"
         }
-    } else if $show_icon_info.icon {
-        if $json != true {
-            echo $icon
-        } else {
-            echo {
-                "icon": $icon
-            } | to json
-        }
-    } else if $show_icon_info.info {
-        if $json != true {
-            echo $all_info
-        } else {
-            echo $all_info | to json
+
+        if $show_icon_info.info {
+            let title = $"(version_info --show_version) / (machine_info)"
+            let title_with_ansi = $"($colors.0)(version_info --show_version) \e[0m/ ($colors.0)(machine_info)"
+            print -n $"\e[u"
+            if $icon_wid + $space > 0 { print -n $"\e[($icon_wid + $space)C" }
+            print -n $"($title_with_ansi)"
+            print -n $"\e[1B"
+            print -n $"\r"
+            if $icon_wid + $space > 0 { print -n $"\e[($icon_wid + $space)C" }
+            print -n $"\e[0m"
+            for _ in 1..($title | str length) { print -n "-" }
+            mut output_lines = 2
+
+            let info_list_keys = ($info_list | columns)
+            for $i in 1..($info_list_keys | length) {
+                let key = ($info_list_keys | get ($i - 1))
+                print -n $"\e[u"
+                print -n $"\e[($output_lines)B"
+                if $icon_wid + $space > 0 { print -n $"\e[($icon_wid + $space)C" }
+                print -n $"($colors.0)($key)\e[0m: ($info_list | get $key)"
+                print -n $"\n" # 这里的换行是为了防止终端高度不足时 ESC[?B 绘制的文字重叠
+                $output_lines += 1
+            }
+
+            $output_lines += 1
+
+            for $i in 1..2 {
+                let color_type = if $i == 1 { "normal" } else { "bright" }
+                print -n $"\e[u"
+                print -n $"\e[($output_lines)B"
+                if $icon_wid + $space > 0 { print -n $"\e[($icon_wid + $space)C" }
+                print -n $"(color_info $color_type)"
+                print -n $"\n" # 这里的换行是为了防止终端高度不足时 ESC[?B 绘制的文字重叠
+                $output_lines += 1
+            }
+
+            if $icon_len > $output_lines {
+                print -n $"\e[u"
+                print -n $"\e[($icon_len)B" # 把光标重新移动到底部
+            } else {
+                print -n "\n"
+            }
         }
     } else {
-        echo ""
+        let show_info = if $show_icon_info.icon and $show_icon_info.info {
+            echo {
+                icon: $icon
+                ...$info_list
+            }
+        } else if $show_icon_info.info {
+            echo {
+                ...$info_list
+            }
+        } else if $show_icon_info.icon {
+            echo {
+                icon: $icon
+            }
+        } else echo { }
+
+        print ($show_info | to json -i 4)
     }
 }
 
