@@ -109,7 +109,7 @@ $"($icon_colors.3)             ......
 ($icon_colors.1)-######         ($icon_colors.0)==============-
 ($icon_colors.1)=#####+         ($icon_colors.0)=+++++++++++++=
 ($icon_colors.1)-######         ($icon_colors.0)=============+-
-($icon_colors.1).####*+-               ($icon_colors.0).=+===+:
+($icon_colors.1)'####*+-               ($icon_colors.0).=+===+:
 ($icon_colors.1) -#+===+=.             ($icon_colors.0)-+===+= 
 ($icon_colors.1)  :=+===++($icon_colors.2)-:.      .:-($icon_colors.0)=+===+=  
 ($icon_colors.1)   '-++=($icon_colors.2)===++======++===($icon_colors.0)=++-   
@@ -267,21 +267,34 @@ def get_shell [] {
     echo $shell_path | last
 }
 
-def color_info [type] {
+def color_info [type printable_space] {
     mut text = ""
     mut t = 4
     if $type == "bright" {
         $t = 10
     }
 
-    for $j in 0..7 {
-        $text += $"\e[($t)($j)m   \e[0m"
+    for $j in 0..23 {
+        if $j == $printable_space { break }
+        $text += $"\e[($t)(($j - 2) / 3 | math ceil)m \e[0m"
     }
 
     echo $text
 }
 
+def print_underline [times] {
+    for _ in 1..$times {
+        print -n "-"
+    }
+}
+
+def get_first_n_chars [in_str n] {
+    if $n < 0 { return "" }
+    echo $in_str | str substring ..$n
+}
+
 def show_info [brand display_icon show_icon_info json] {
+    let terminal_columns = term size | get "columns"
     let colors = get_ascii_colors $display_icon
     let icon = $"(get_ascii_icon $display_icon)"
     let info_list = {
@@ -323,38 +336,68 @@ def show_info [brand display_icon show_icon_info json] {
         }
 
         if $show_icon_info.info {
-            let title = $"(version_info --show_version) / (machine_info)"
-            let title_with_ansi = $"($colors.0)(version_info --show_version) \e[0m/ ($colors.0)(machine_info)"
-            print -n $"\e[u"
-            if $icon_wid + $space > 0 { print -n $"\e[($icon_wid + $space)C" }
-            print -n $"($title_with_ansi)"
-            print -n $"\e[1B"
-            print -n $"\r"
-            if $icon_wid + $space > 0 { print -n $"\e[($icon_wid + $space)C" }
-            print -n $"\e[0m"
-            for _ in 1..($title | str length) { print -n "-" }
-            mut output_lines = 2
+            # Title
+            let print_start = ($icon_wid + $space)
+            let printable_space_right = ($terminal_columns - $print_start)
+            let title_version_info = (version_info --show_version)
+            let title_machine_info = (machine_info)
+            let title = (get_first_n_chars $"($title_version_info)   ($title_machine_info)" ($printable_space_right - 1))
 
+            print -n $"\e[u"
+            if $icon_wid + $space > 0 { print -n $"\e[($print_start)C" }
+            print -n $"($colors.0)"
+            print -n $title
+            print -n $"\e[0m"
+
+            # Slash in version and machine
+            print -n $"\e[u"
+            let slash_start = ($print_start + ($title_version_info | str length) + 1)
+            if $slash_start < $terminal_columns {
+                print -n $"\e[($slash_start)C"
+                print -n $"/"
+            }
+
+            mut output_lines = 1
+
+            # Title underline
+            print -n $"\e[u"
+            print -n $"\e[($output_lines)B"
+            if $icon_wid + $space > 0 { print -n $"\e[($print_start)C" }
+            print -n $"\e[0m"
+            print_underline ([($title | str length), $printable_space_right] | math min)
+            $output_lines += 1
+
+            # Info
             let info_list_keys = ($info_list | columns)
             for $i in 1..($info_list_keys | length) {
                 let key = ($info_list_keys | get ($i - 1))
+                let printable_space_value = $terminal_columns - ($print_start + ($key | str length) + 2)
+                let printable_space_key = ($printable_space_right - 1)
+                let key_str = (get_first_n_chars $key $printable_space_key)
+                let value_str = (get_first_n_chars $": ($info_list | get $key)" ($printable_space_value + 1))
+
                 print -n $"\e[u"
                 print -n $"\e[($output_lines)B"
-                if $icon_wid + $space > 0 { print -n $"\e[($icon_wid + $space)C" }
-                print -n $"($colors.0)($key)\e[0m: ($info_list | get $key)"
+                if $icon_wid + $space > 0 { print -n $"\e[($print_start)C" } # 这里的 if 是因为 ESC[?C 参数即使等于 0 也会移动 1 个文字
+                print -n $"($colors.0)"
+                print -n $"($key_str)"
+                print -n $"\e[0m"
+                print -n $"($value_str)"
                 print -n $"\n" # 这里的换行是为了防止终端高度不足时 ESC[?B 绘制的文字重叠
                 $output_lines += 1
             }
 
+            # Empty line between info and color display
             print -n "\n"
             $output_lines += 1
 
+            # Color display
             for $i in 1..2 {
                 let color_type = if $i == 1 { "normal" } else { "bright" }
                 print -n $"\e[u"
                 print -n $"\e[($output_lines)B"
-                if $icon_wid + $space > 0 { print -n $"\e[($icon_wid + $space)C" }
-                print -n $"(color_info $color_type)"
+                if $icon_wid + $space > 0 { print -n $"\e[($print_start)C" }
+                print -n $"(color_info $color_type $printable_space_right)"
                 print -n $"\n" # 这里的换行是为了防止终端高度不足时 ESC[?B 绘制的文字重叠
                 $output_lines += 1
             }
