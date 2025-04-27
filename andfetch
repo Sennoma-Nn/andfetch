@@ -12,6 +12,7 @@ def get_ascii_colors [ icon ] {
         vivo: ["\e[34m", "\e[37m", "", ""]
         huawei: ["\e[31m", "", "", ""]
         realme: ["\e[33m", "", "", ""]
+        samsung: ["\e[34m", "\e[37m", "", ""]
     }
 
     if ($icon_key in $colors) {
@@ -171,6 +172,25 @@ $"($icon_colors.0)+*************+=.
 ($icon_colors.0)=+-               :+*:
                       "
 
+samsung:
+$"($icon_colors.0)       .SSSSSSSSSSSSSSSS.       
+($icon_colors.0)    .SSSSSSSSSSSSSSSSSSSSSS.    
+($icon_colors.0)  .SSSSSSSSSSSSSSSSSSSSSSSSSS.  
+($icon_colors.0) .SSSSSSSSSS($icon_colors.1)@@@@@@@($icon_colors.0)SSSSSSSSSSS. 
+($icon_colors.0).SSSSSSSSS($icon_colors.1)@@@@@@@@@@($icon_colors.0)SSSSSSSSSSS.
+($icon_colors.0)SSSSSSSSS($icon_colors.1)@@@@@($icon_colors.0)SS($icon_colors.1)@@@@@($icon_colors.0)SSSSSSSSSSS
+($icon_colors.0)SSSSSSSSS($icon_colors.1)@@@@@@($icon_colors.0)SSSSSSSSSSSSSSSSS
+($icon_colors.0)SSSSSSSSSS($icon_colors.1)@@@@@@@@($icon_colors.0)SSSSSSSSSSSSSS
+($icon_colors.0)SSSSSSSSSSSSS($icon_colors.1)@@@@@@@@($icon_colors.0)SSSSSSSSSSS
+($icon_colors.0)SSSSSSSSSSSSSSS($icon_colors.1)@@@@@@@($icon_colors.0)SSSSSSSSSS
+($icon_colors.0)SSSSSSSSS($icon_colors.1)@@@@@($icon_colors.0)SSS($icon_colors.1)@@@@@($icon_colors.0)SSSSSSSSSS
+($icon_colors.0)'SSSSSSSSS($icon_colors.1)@@@@@@@@@@@($icon_colors.0)SSSSSSSSSS'
+($icon_colors.0) 'SSSSSSSSSS($icon_colors.1)@@@@@@@($icon_colors.0)SSSSSSSSSSS' 
+($icon_colors.0)  'SSSSSSSSSSSSSSSSSSSSSSSSSS'  
+($icon_colors.0)    'SSSSSSSSSSSSSSSSSSSSSS'    
+($icon_colors.0)       'SSSSSSSSSSSSSSSS'        
+                                "
+
 android:
 $"($icon_colors.0)         -o          o-         
 ($icon_colors.0)          +hydNNNNdyh+          
@@ -247,12 +267,14 @@ def machine_info [] {
 }
 
 def cpu_info [] {
-    let cpu = (open /proc/cpuinfo | lines | where $it =~ 'Hardware' | split column ': ' | get "column2" | uniq | str join ', ')
-    if $cpu == "" {
-        echo "* Undetectable *"
-    } else {
-        echo $cpu
-    }
+    let output = (LANG=C lscpu)
+
+    let cpu_list = $output | lines
+    | filter { |line| $line =~ "Model name:" }
+    | parse -r '^\s*Model name:\s+(.*)'
+    | get capture0
+
+    echo $cpu_list | str join ", "
 }
 
 def memory_info [] {
@@ -268,6 +290,10 @@ def get_shell [] {
 }
 
 def color_info [type printable_space] {
+    if $printable_space <= 0 {
+        return ""
+    }
+
     mut text = ""
     mut t = 4
     if $type == "bright" {
@@ -283,13 +309,20 @@ def color_info [type printable_space] {
 }
 
 def print_underline [times] {
+    if $times <= 0 {
+        return ""
+    }
+
     for _ in 1..$times {
         print -n "-"
     }
 }
 
 def get_first_n_chars [in_str n] {
-    if $n < 0 { return "" }
+    if $n < 0 {
+        return ""
+    }
+
     echo $in_str | str substring ..$n
 }
 
@@ -302,12 +335,12 @@ def show_info [brand display_icon show_icon_info json] {
         Mfr: (mfr_info)
         Host: (host_name_info)
         Version: (version_info --show_version --show_time)
-        Rernel: (kernel_info)
+        Kernel: (kernel_info)
         Rooted: (rooted_info)
+        Shell: (get_shell)
         Machine: (machine_info)
         "CPU Model": (cpu_info)
         Memory: (memory_info)
-        Shell: (get_shell)
     }
 
     if $json == false {
@@ -316,24 +349,19 @@ def show_info [brand display_icon show_icon_info json] {
         mut space = 4
         
         if $show_icon_info.icon {
-            for _ in 1..$icon_len {
-                print -n "\n" # 为终端空出位置，如果提示符在终端底下会导致绘制重叠
-            }
-
-            print -n $"\e[($icon_len)A"
         } else {
             $icon_len = 0
             $icon_wid = 0
             $space = 0
         }
-
-        print -n $"\e[s"
         
         if $show_icon_info.icon {
-            print -n $"\e[u"
             print -n $icon
             print -n "\n"
         }
+
+        if $icon_len > 0 { print -n $"\e[($icon_len)A" }
+        print -n $"\e[s"
 
         if $show_icon_info.info {
             # Title
@@ -354,9 +382,10 @@ def show_info [brand display_icon show_icon_info json] {
             let slash_start = ($print_start + ($title_version_info | str length) + 1)
             if $slash_start < $terminal_columns {
                 print -n $"\e[($slash_start)C"
+                print -n $"\e[0m"
                 print -n $"/"
             }
-
+            print -n "\n"
             mut output_lines = 1
 
             # Title underline
@@ -365,6 +394,7 @@ def show_info [brand display_icon show_icon_info json] {
             if $icon_wid + $space > 0 { print -n $"\e[($print_start)C" }
             print -n $"\e[0m"
             print_underline ([($title | str length), $printable_space_right] | math min)
+            print -n "\n"
             $output_lines += 1
 
             # Info
