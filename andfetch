@@ -1,5 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/env nu
 
+let andfetch_version = "0.0.15"
+
 def get_ascii_colors [ icon ] {
     let icon_key = $icon  | str downcase
 
@@ -360,10 +362,10 @@ def show_info [brand display_icon show_icon_info json] {
             print -n "\n"
         }
 
-        if $icon_len > 0 { print -n $"\e[($icon_len)A" }
-        print -n $"\e[s"
-
         if $show_icon_info.info {
+            if $icon_len > 0 { print -n $"\e[($icon_len)A" }
+            print -n $"\e[s"
+
             # Title
             let print_start = ($icon_wid + $space)
             let printable_space_right = ($terminal_columns - $print_start)
@@ -459,12 +461,19 @@ def show_info [brand display_icon show_icon_info json] {
     }
 }
 
+# System Fetch Tool for Android.
 def main [
-    --icon: string
-    --hide_icon
-    --hide_info
-    --json
-] {
+    --icon: string (-i) # Specify the ASCII icon to display
+    --hide_icon         # Hide the ASCII icon and only show information
+    --hide_info         # Hide information and only display the ASCII icon
+    --json (-j)         # Output in JSON format
+    --version (-v)      # Print the version
+]: string -> string {
+    if $version {
+        print $andfetch_version
+        exit 0
+    }
+
     let os_name = $nu.os-info.name
     if (uname | get "operating-system") != "Android" {
         error make -u {
