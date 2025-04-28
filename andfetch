@@ -468,7 +468,7 @@ def main [
     --hide_info         # Hide information and only display the ASCII icon
     --json (-j)         # Output in JSON format
     --version (-v)      # Print the version
-]: string -> string {
+]: any -> string {
     if $version {
         print $andfetch_version
         exit 0
