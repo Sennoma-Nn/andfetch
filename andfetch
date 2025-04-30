@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/env nu
 
-let andfetch_version = "0.0.15"
+let andfetch_version = "0.1.0"
 
 def get_ascii_colors [ icon ] {
     let icon_key = $icon  | str downcase
@@ -15,39 +15,42 @@ def get_ascii_colors [ icon ] {
         huawei: ["\e[31m", "", "", ""]
         realme: ["\e[33m", "", "", ""]
         samsung: ["\e[34m", "\e[37m", "", ""]
+        android: ["\e[32m", "\e[37m", "", ""]
     }
 
     if ($icon_key in $colors) {
         echo $colors | get $icon_key
     } else {
-        echo ["\e[32m", "\e[37m", "", ""]
+        echo $colors | get "android"
     }
 }
 
 def get_ascii_icon [ icon ] {
     let icon_key = $icon  | str downcase
     let icon_colors = get_ascii_colors $icon_key
+
+    # The number of spaces in the last line of every ASCII icon must match its actual rendered width in the terminal
     let ascii_icons = {
 
 oneplus: 
-$"($icon_colors.0)                      ██    
-($icon_colors.0)                      ██    
+$"($icon_colors.0)                      ██
+($icon_colors.0)                      ██
 ($icon_colors.0)████████████████  ██████████
-($icon_colors.0)██                    ██    
-($icon_colors.0)██                    ██    
-($icon_colors.0)██      █████               
-($icon_colors.0)██         ██         ██    
-($icon_colors.0)██         ██         ██    
-($icon_colors.0)██         ██         ██    
-($icon_colors.0)██         ██         ██    
-($icon_colors.0)██      ████████      ██    
-($icon_colors.0)██                    ██    
-($icon_colors.0)██                    ██    
-($icon_colors.0)████████████████████████    
+($icon_colors.0)██                    ██
+($icon_colors.0)██                    ██
+($icon_colors.0)██      █████
+($icon_colors.0)██         ██         ██
+($icon_colors.0)██         ██         ██
+($icon_colors.0)██         ██         ██
+($icon_colors.0)██         ██         ██
+($icon_colors.0)██      ████████      ██
+($icon_colors.0)██                    ██
+($icon_colors.0)██                    ██
+($icon_colors.0)████████████████████████
                             "
 
 xiaomi: 
-$"($icon_colors.0) .llllllllllllllllllllllllllllllll. 
+$"($icon_colors.0) .llllllllllllllllllllllllllllllll.
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
@@ -64,11 +67,11 @@ $"($icon_colors.0) .llllllllllllllllllllllllllllllll.
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
-($icon_colors.0) 'llllllllllllllllllllllllllllllll' 
+($icon_colors.0) 'llllllllllllllllllllllllllllllll'
                                     "
 
 redmi: 
-$"($icon_colors.0) .llllllllllllllllllllllllllllllll. 
+$"($icon_colors.0) .llllllllllllllllllllllllllllllll.
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
@@ -85,44 +88,44 @@ $"($icon_colors.0) .llllllllllllllllllllllllllllllll.
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
 ($icon_colors.0)llllllllllllllllllllllllllllllllllll
-($icon_colors.0) 'llllllllllllllllllllllllllllllll' 
+($icon_colors.0) 'llllllllllllllllllllllllllllllll'
                                     "
 
 oppo: 
-$"($icon_colors.0)      .~:!7?JJ??79~.      
-($icon_colors.0)   .QYPGBBGGPPGGGBBG5P.   
-($icon_colors.0) .?GBBP?~'      '~7YGBGY. 
+$"($icon_colors.0)      .~:!7?JJ??79~.
+($icon_colors.0)   .QYPGBBGGPPGGGBBG5P.
+($icon_colors.0) .?GBBP?~'      '~7YGBGY.
 ($icon_colors.0)~5BBG~              ~5BBG~
 ($icon_colors.0)6BGB~                ~GGB5
 ($icon_colors.0)6BGB~                ~PGB5
 ($icon_colors.0)~PBBP~              ~YBBG~
-($icon_colors.0) 'JGBB57~.      .~!JGBB5' 
-($icon_colors.0)   '7YGBBGGPPPPPGBBG5?'   
-($icon_colors.0)      '~!7JJYYJJ?!~'      
+($icon_colors.0) 'JGBB57~.      .~!JGBB5'
+($icon_colors.0)   '7YGBBGGPPPPPGBBG5?'
+($icon_colors.0)      '~!7JJYYJJ?!~'
                           "
 
 google: 
-$"($icon_colors.3)             ......            
-($icon_colors.3)        .:-==========-:.       
-($icon_colors.1)     .($icon_colors.3)-==================:     
-($icon_colors.1)   .-===($icon_colors.3)================:'     
-($icon_colors.1)  :=======($icon_colors.3)-:'      .:-:        
-($icon_colors.1) -#+====-'                     
-($icon_colors.1).####*+-                       
+$"($icon_colors.3)             ......
+($icon_colors.3)        .:-==========-:.
+($icon_colors.1)     .($icon_colors.3)-==================:
+($icon_colors.1)   .-===($icon_colors.3)================:'
+($icon_colors.1)  :=======($icon_colors.3)-:'      .:-:
+($icon_colors.1) -#+====-'
+($icon_colors.1).####*+-
 ($icon_colors.1)-######         ($icon_colors.0)==============-
 ($icon_colors.1)=#####+         ($icon_colors.0)=+++++++++++++=
 ($icon_colors.1)-######         ($icon_colors.0)=============+-
 ($icon_colors.1)'####*+-               ($icon_colors.0).=+===+:
-($icon_colors.1) -#+===+=.             ($icon_colors.0)-+===+= 
-($icon_colors.1)  :=+===++($icon_colors.2)-:.      .:-($icon_colors.0)=+===+=  
-($icon_colors.1)   '-++=($icon_colors.2)===++======++===($icon_colors.0)=++-   
-($icon_colors.1)     '($icon_colors.2)-=+++==========+++=-($icon_colors.0)'    
-($icon_colors.2)        ':-==========-:'       
-($icon_colors.2)             ''''''            
+($icon_colors.1) -#+===+=.             ($icon_colors.0)-+===+=
+($icon_colors.1)  :=+===++($icon_colors.2)-:.      .:-($icon_colors.0)=+===+=
+($icon_colors.1)   '-++=($icon_colors.2)===++======++===($icon_colors.0)=++-
+($icon_colors.1)     '($icon_colors.2)-=+++==========+++=-($icon_colors.0)'
+($icon_colors.2)        ':-==========-:'
+($icon_colors.2)             ''''''
                                "
 
 vivo: 
-$"($icon_colors.0) .--========================--. 
+$"($icon_colors.0) .--========================--.
 ($icon_colors.0):==============================:
 ($icon_colors.0)-==============================-
 ($icon_colors.0)-==============================-
@@ -137,81 +140,81 @@ $"($icon_colors.0) .--========================--.
 ($icon_colors.0)-==========-($icon_colors.1)-#%@@%#-($icon_colors.0)-==========-
 ($icon_colors.0)-==============================-
 ($icon_colors.0):==============================:
-($icon_colors.0) '--========================--' 
+($icon_colors.0) '--========================--'
                                 "
 
 huawei: 
-$"($icon_colors.0)          :+*#.  .#*+:          
-($icon_colors.0)         *@@@@#  #@@@@*         
-($icon_colors.0)    =+  :@@@@@@..@@@@@@:  +=    
-($icon_colors.0)   *@@#: %@@@@@--@@@@@% :%@@*   
-($icon_colors.0)  -@@@@@-:@@@@@==@@@@@:-@@@@@-  
-($icon_colors.0)  .@@@@@@+-@@@@==@@@@-+@@@@@@.  
+$"($icon_colors.0)          :+*#.  .#*+:
+($icon_colors.0)         *@@@@#  #@@@@*
+($icon_colors.0)    =+  :@@@@@@..@@@@@@:  +=
+($icon_colors.0)   *@@#: %@@@@@--@@@@@% :%@@*
+($icon_colors.0)  -@@@@@-:@@@@@==@@@@@:-@@@@@-
+($icon_colors.0)  .@@@@@@+-@@@@==@@@@-+@@@@@@.
 ($icon_colors.0)=+::+%@@@@*-@@@==@@@-*@@@@%+::+=
 ($icon_colors.0)#@@%*=+*%@@%-#@--@#-%@@%*+=*%@@#
 ($icon_colors.0)'%@@@@@#*+*%%:*::*:%%*+*#@@@@@%'
-($icon_colors.0)  =*#%%@@%*==:    :==*%@@%%#*=  
-($icon_colors.0)   :+****##*-      -*##****+:   
-($icon_colors.0)    =%@@%*-          -*%@@%=    
+($icon_colors.0)  =*#%%@@%*==:    :==*%@@%%#*=
+($icon_colors.0)   :+****##*-      -*##****+:
+($icon_colors.0)    =%@@%*-          -*%@@%=
                                 "
 
 realme: 
-$"($icon_colors.0)+*************+=.     
-($icon_colors.0)*#############%@@@#-  
-($icon_colors.0)                .+@@* 
+$"($icon_colors.0)+*************+=.
+($icon_colors.0)*#############%@@@#-
+($icon_colors.0)                .+@@*
 ($icon_colors.0)                  .@@+
 ($icon_colors.0)#@@@@@@@@@@@@*     *@%
 ($icon_colors.0)%@###########-     %@*
-($icon_colors.0)#@*              -%@# 
-($icon_colors.0)#@*    -*******#@@%=  
-($icon_colors.0)#@*    *@@#*###*='    
-($icon_colors.0)#@*    .*@#:          
-($icon_colors.0)#@*      :%@#:        
-($icon_colors.0)#@*        -@@*.      
-($icon_colors.0)#@*          =@@+     
-($icon_colors.0)#@*            +@@=   
-($icon_colors.0)%@#             .*@%- 
+($icon_colors.0)#@*              -%@#
+($icon_colors.0)#@*    -*******#@@%=
+($icon_colors.0)#@*    *@@#*###*='
+($icon_colors.0)#@*    .*@#:
+($icon_colors.0)#@*      :%@#:
+($icon_colors.0)#@*        -@@*.
+($icon_colors.0)#@*          =@@+
+($icon_colors.0)#@*            +@@=
+($icon_colors.0)%@#             .*@%-
 ($icon_colors.0)=+-               :+*:
                       "
 
 samsung:
-$"($icon_colors.0)       .SSSSSSSSSSSSSSSS.       
-($icon_colors.0)    .SSSSSSSSSSSSSSSSSSSSSS.    
-($icon_colors.0)  .SSSSSSSSSSSSSSSSSSSSSSSSSS.  
-($icon_colors.0) .SSSSSSSSSS($icon_colors.1)@@@@@@@($icon_colors.0)SSSSSSSSSSS. 
-($icon_colors.0).SSSSSSSSS($icon_colors.1)@@@@@@@@@@($icon_colors.0)SSSSSSSSSSS.
-($icon_colors.0)SSSSSSSSS($icon_colors.1)@@@@@($icon_colors.0)SS($icon_colors.1)@@@@@($icon_colors.0)SSSSSSSSSSS
-($icon_colors.0)SSSSSSSSS($icon_colors.1)@@@@@@($icon_colors.0)SSSSSSSSSSSSSSSSS
-($icon_colors.0)SSSSSSSSSS($icon_colors.1)@@@@@@@@($icon_colors.0)SSSSSSSSSSSSSS
-($icon_colors.0)SSSSSSSSSSSSS($icon_colors.1)@@@@@@@@($icon_colors.0)SSSSSSSSSSS
-($icon_colors.0)SSSSSSSSSSSSSSS($icon_colors.1)@@@@@@@($icon_colors.0)SSSSSSSSSS
-($icon_colors.0)SSSSSSSSS($icon_colors.1)@@@@@($icon_colors.0)SSS($icon_colors.1)@@@@@($icon_colors.0)SSSSSSSSSS
-($icon_colors.0)'SSSSSSSSS($icon_colors.1)@@@@@@@@@@@($icon_colors.0)SSSSSSSSSS'
-($icon_colors.0) 'SSSSSSSSSS($icon_colors.1)@@@@@@@($icon_colors.0)SSSSSSSSSSS' 
-($icon_colors.0)  'SSSSSSSSSSSSSSSSSSSSSSSSSS'  
-($icon_colors.0)    'SSSSSSSSSSSSSSSSSSSSSS'    
-($icon_colors.0)       'SSSSSSSSSSSSSSSS'        
+$"($icon_colors.0)       .================.
+($icon_colors.0)    .======================.
+($icon_colors.0)  .==========================.
+($icon_colors.0) .=========-($icon_colors.1)%@@@@@%($icon_colors.0)-==========.
+($icon_colors.0).========-($icon_colors.1)%@@@@@@@@%($icon_colors.0)-==========.
+($icon_colors.0)-=======-($icon_colors.1)%@@@%($icon_colors.0)--($icon_colors.1)%@@@%($icon_colors.0)-=========-
+($icon_colors.0)-=======-($icon_colors.1)%@@@@%($icon_colors.0)-===============-
+($icon_colors.0)-========-($icon_colors.1)%@@@@@@%($icon_colors.0)-============-
+($icon_colors.0)-===========-($icon_colors.1)%@@@@@@%($icon_colors.0)-=========-
+($icon_colors.0)-=============-($icon_colors.1)%@@@@@%($icon_colors.0)-========-
+($icon_colors.0)-=======-($icon_colors.1)%@@@%($icon_colors.0)-=-($icon_colors.1)%@@@%($icon_colors.0)-========-
+($icon_colors.0)'========-($icon_colors.1)%@@@@@@@@@%($icon_colors.0)-========='
+($icon_colors.0) '=========-($icon_colors.1)%@@@@@%($icon_colors.0)-=========='
+($icon_colors.0)  '=========================='
+($icon_colors.0)    '======================'
+($icon_colors.0)       '================'
                                 "
 
 android:
-$"($icon_colors.0)         -o          o-         
-($icon_colors.0)          +hydNNNNdyh+          
-($icon_colors.0)        +mMMMMMMMMMMMMm+        
-($icon_colors.0)      `dMM($icon_colors.1)m:($icon_colors.0)NMMMMMMN($icon_colors.1):m($icon_colors.0)MMd`      
-($icon_colors.0)      hMMMMMMMMMMMMMMMMMMh      
-($icon_colors.0)  ..  yyyyyyyyyyyyyyyyyyyy  ..  
+$"($icon_colors.0)         -o          o-
+($icon_colors.0)          +hydNNNNdyh+
+($icon_colors.0)        +mMMMMMMMMMMMMm+
+($icon_colors.0)      `dMM($icon_colors.1)m:($icon_colors.0)NMMMMMMN($icon_colors.1):m($icon_colors.0)MMd`
+($icon_colors.0)      hMMMMMMMMMMMMMMMMMMh
+($icon_colors.0)  ..  yyyyyyyyyyyyyyyyyyyy  ..
 ($icon_colors.0).mMMm`MMMMMMMMMMMMMMMMMMMM`mMMm.
 ($icon_colors.0):MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
 ($icon_colors.0):MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
 ($icon_colors.0):MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
 ($icon_colors.0):MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM:
 ($icon_colors.0)-MMMM-MMMMMMMMMMMMMMMMMMMM-MMMM-
-($icon_colors.0) +yy+ MMMMMMMMMMMMMMMMMMMM +yy+ 
-($icon_colors.0)      mMMMMMMMMMMMMMMMMMMm      
-($icon_colors.0)      `/++MMMMh++hMMMM++/`      
-($icon_colors.0)          MMMMo  oMMMM          
-($icon_colors.0)          MMMMo  oMMMM          
-($icon_colors.0)          oNMm-  -mMNs          
+($icon_colors.0) +yy+ MMMMMMMMMMMMMMMMMMMM +yy+
+($icon_colors.0)      mMMMMMMMMMMMMMMMMMMm
+($icon_colors.0)      `/++MMMMh++hMMMM++/`
+($icon_colors.0)          MMMMo  oMMMM
+($icon_colors.0)          MMMMo  oMMMM
+($icon_colors.0)          oNMm-  -mMNs
                                 "
 
     }
@@ -245,6 +248,15 @@ def rooted_info [] {
     }
 }
 
+def locked_info [] {
+    let lcoked = (getprop ro.boot.flash.locked)
+    if $lcoked == "1" {
+        echo "Locked"
+    } else {
+        echo "Unlocked"
+    }
+}
+
 def host_name_info [] {
     let host_name = (sys host | get "name")
     echo $host_name
@@ -263,9 +275,9 @@ def version_info [ --show_version --show_time ] {
     echo $output_str
 }
 
-def machine_info [] {
-    let machine = (uname | get "machine")
-    echo $machine
+def architecture_info [] {
+    let architecture = (getprop ro.product.cpu.abi)
+    echo $architecture
 }
 
 def cpu_info [] {
@@ -276,11 +288,22 @@ def cpu_info [] {
     | parse -r '^\s*Model name:\s+(.*)'
     | get capture0
 
-    echo $cpu_list | str join ", "
+    echo $cpu_list
 }
 
 def memory_info [] {
     open /proc/meminfo | grep MemTotal | awk '{printf "%.2f GB", $2/1024/1024}'
+}
+
+def locale_info [] {
+    mut lang = (getprop persist.sys.locale)
+    if $lang == "" {
+        $lang = (getprop ro.product.locale)
+    }
+    if $lang == "" {
+        $lang = "en-US"
+    }
+    echo $lang
 }
 
 def get_shell [] {
@@ -328,19 +351,21 @@ def get_first_n_chars [in_str n] {
     echo $in_str | str substring ..$n
 }
 
-def show_info [brand display_icon show_icon_info json] {
+def show_info [brand display_icon show_icon_info json indentation info_space] {
     let terminal_columns = term size | get "columns"
     let colors = get_ascii_colors $display_icon
     let icon = $"(get_ascii_icon $display_icon)"
-    let info_list = {
+    mut info_list = {
         Brand: $brand
         Mfr: (mfr_info)
         Host: (host_name_info)
         Version: (version_info --show_version --show_time)
         Kernel: (kernel_info)
+        Bootloader: (locked_info)
         Rooted: (rooted_info)
+        Locale: (locale_info)
         Shell: (get_shell)
-        Machine: (machine_info)
+        Architecture: (architecture_info)
         "CPU Model": (cpu_info)
         Memory: (memory_info)
     }
@@ -348,21 +373,28 @@ def show_info [brand display_icon show_icon_info json] {
     if $json == false {
         mut icon_len = ($icon | split row "\n" | length)
         mut icon_wid = ($icon | split row "\n" | last | str length)
-        mut space = 4
-        
+        mut space = $info_space
+
         if $show_icon_info.icon {
         } else {
             $icon_len = 0
             $icon_wid = 0
             $space = 0
         }
+
+        $info_list = $info_list | update "CPU Model" (
+            $info_list | get "CPU Model" | str join ", "
+        )
         
         if $show_icon_info.icon {
+            print -n "\e[0;1m"
             print -n $icon
             print -n "\n"
+            print -n "\e[0m"
         }
 
         if $show_icon_info.info {
+            print -n "\e[0m"
             if $icon_len > 0 { print -n $"\e[($icon_len)A" }
             print -n $"\e[s"
 
@@ -370,16 +402,17 @@ def show_info [brand display_icon show_icon_info json] {
             let print_start = ($icon_wid + $space)
             let printable_space_right = ($terminal_columns - $print_start)
             let title_version_info = (version_info --show_version)
-            let title_machine_info = (machine_info)
-            let title = (get_first_n_chars $"($title_version_info)   ($title_machine_info)" ($printable_space_right - 1))
+            let title_architecture_info = (architecture_info)
+            let title = (get_first_n_chars $"($title_version_info)   ($title_architecture_info)" ($printable_space_right - 1))
 
             print -n $"\e[u"
             if $icon_wid + $space > 0 { print -n $"\e[($print_start)C" }
             print -n $"($colors.0)"
+            print -n $"\e[1m"
             print -n $title
             print -n $"\e[0m"
 
-            # Slash in version and machine
+            # Slash in version and architecture
             print -n $"\e[u"
             let slash_start = ($print_start + ($title_version_info | str length) + 1)
             if $slash_start < $terminal_columns {
@@ -410,12 +443,13 @@ def show_info [brand display_icon show_icon_info json] {
 
                 print -n $"\e[u"
                 print -n $"\e[($output_lines)B"
-                if $icon_wid + $space > 0 { print -n $"\e[($print_start)C" } # 这里的 if 是因为 ESC[?C 参数即使等于 0 也会移动 1 个文字
+                if $icon_wid + $space > 0 { print -n $"\e[($print_start)C" } # The 'if' is needed because ESC[?C moves the cursor 1 character even when the parameter is 0
                 print -n $"($colors.0)"
+                print -n $"\e[1m"
                 print -n $"($key_str)"
                 print -n $"\e[0m"
                 print -n $"($value_str)"
-                print -n $"\n" # 这里的换行是为了防止终端高度不足时 ESC[?B 绘制的文字重叠
+                print -n $"\n"
                 $output_lines += 1
             }
 
@@ -430,21 +464,23 @@ def show_info [brand display_icon show_icon_info json] {
                 print -n $"\e[($output_lines)B"
                 if $icon_wid + $space > 0 { print -n $"\e[($print_start)C" }
                 print -n $"(color_info $color_type $printable_space_right)"
-                print -n $"\n" # 这里的换行是为了防止终端高度不足时 ESC[?B 绘制的文字重叠
+                print -n $"\n"
                 $output_lines += 1
             }
 
             if $icon_len > $output_lines {
                 print -n $"\e[u"
-                print -n $"\e[($icon_len)B" # 把光标重新移动到底部
+                print -n $"\e[($icon_len)B" # Move the cursor back to the bottom
             } else {
                 print -n "\n"
             }
         }
     } else {
+        mut icon_with_x1b = $icon | str replace "\e" "\\x1b" --all
+
         let show_info = if $show_icon_info.icon and $show_icon_info.info {
             echo {
-                icon: $icon
+                icon: $icon_with_x1b
                 ...$info_list
             }
         } else if $show_icon_info.info {
@@ -453,21 +489,24 @@ def show_info [brand display_icon show_icon_info json] {
             }
         } else if $show_icon_info.icon {
             echo {
-                icon: $icon
+                icon: $icon_with_x1b
             }
         } else echo { }
 
-        print ($show_info | to json -i 4)
+        print ($show_info | to json -i $indentation)
     }
+    print -n "\e[0m"
 }
 
 # System Fetch Tool for Android.
 def main [
-    --icon: string (-i) # Specify the ASCII icon to display
-    --hide_icon         # Hide the ASCII icon and only show information
-    --hide_info         # Hide information and only display the ASCII icon
-    --json (-j)         # Output in JSON format
-    --version (-v)      # Print the version
+    --icon: string (-i)         # Specify the ASCII icon to display
+    --hide_icon                 # Hide the ASCII icon and only show information
+    --hide_info                 # Hide information and only display the ASCII icon
+    --version (-v)              # Display the version
+    --json (-j)                 # Display in JSON format
+    --indentation: int = 4 (-I) # JSON Display indentation level
+    --space: int = 4 (-s)       # The spacing between the ASCII icon and the information
 ]: any -> string {
     if $version {
         print $andfetch_version
@@ -480,7 +519,19 @@ def main [
             msg: "This script is only allowed to run on Android."
         }
     }
-    
+
+    if $space < 0 {
+        error make -u {
+            msg: "The value of --space must be >= 0."
+        }
+    }
+
+    if $indentation < 0 {
+        error make -u {
+            msg: "The value of --indentation must be >= 0."
+        }
+    }
+
     let brand = (getprop ro.product.brand)
     mut display_icon = $brand
 
@@ -501,5 +552,5 @@ def main [
         $show_icon_info.info = false
     }
 
-    show_info $brand $display_icon $show_icon_info $json
+    show_info $brand $display_icon $show_icon_info $json $indentation $space
 }
