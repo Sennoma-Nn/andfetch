@@ -12,10 +12,11 @@ Currently supported ASCII icon include:
 4) Redmi
 5) Vivo
 6) Samsung
-7) Realme
-8) Oppo
-9) Huawei
-10) Oneplus
+7) Motorola
+8) Realme
+9) Oppo
+10) Huawei
+11) Oneplus
 
 Flags:
 
@@ -42,10 +43,11 @@ Andfetch (Android Fetch) 是一个使用 Nushell 编写的 Android 设备信息�
 4) Redmi
 5) Vivo
 6) Samsung
-7) Realme
-8) Oppo
-9) Huawei
-10) Oneplus
+7) Motorola
+8) Realme
+9) Oppo
+10) Huawei
+11) Oneplus
 
 参数与开关：
 
