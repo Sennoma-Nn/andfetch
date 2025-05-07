@@ -2,7 +2,10 @@
 
 let andfetch_version = "0.1.0"
 
-def get_ascii_colors [ icon ] {
+# Get color codes for ASCII art based on device brand
+def get_ascii_colors [
+    icon # Device brand name to get colors for
+] {
     let icon_key = $icon  | str downcase
 
     let colors = {
@@ -26,7 +29,10 @@ def get_ascii_colors [ icon ] {
     }
 }
 
-def get_ascii_icon [ icon ] {
+# Get ASCII art icon for device brand
+def get_ascii_icon [
+    icon # Device brand name to get icon for
+] {
     let icon_key = $icon  | str downcase
     let icon_colors = get_ascii_colors $icon_key
 
@@ -244,49 +250,61 @@ $"($icon_colors.0)                      ██
     }
 }
 
+# Get device brand information
+def brand_info [] {
+    let brand = (getprop ro.product.brand)
+    echo $brand
+}
+
+# Get device manufacturer information
 def mfr_info [] {
     let mfr = (getprop ro.product.manufacturer)
     echo $mfr
 }
 
+# Check if device is rooted
 def rooted_info [] {
-    if ((whoami) == "root") {
-        echo "rooted"
-    } else {
-        let root_paths = [
-            "/system/bin/su"
-            "/system/xbin/su"
-            "/sbin/su"
-        ]
-
-        if ($root_paths | any { |it| $it | path exists }) {
-            echo "su detected"
-        } else {
-            echo "su not detected"
-        }
+    try {
+        let su_test = (su --version err> /dev/null)
+        echo $"Rooted \(($su_test)\)"
+    } catch {
+        echo "Not rooted"
     }
 }
 
+# Check if device bootloader is locked
 def locked_info [] {
-    let lcoked = (getprop ro.boot.flash.locked)
-    if $lcoked == "1" {
+    let locked = (getprop ro.boot.flash.locked)
+    if $locked == "1" {
         echo "Locked"
     } else {
         echo "Unlocked"
     }
 }
 
+# Get device hostname
 def host_name_info [] {
     let host_name = (sys host | get "name")
     echo $host_name
 }
 
+# Get kernel version information
 def kernel_info [] {
     let kernel_release = (uname | get "kernel-release")
     echo $kernel_release
 }
 
-def version_info [ --show_version --show_time ] {
+# Get Android SDK version
+def sdk_info [] {
+    let sdk_version = (getprop ro.build.version.sdk)
+    echo $sdk_version
+}
+
+# Get Android version information
+def version_info [
+    --show_version # Include version number
+    --show_time # Include security patch date
+] {
     mut output_str = ""
     if $show_version { $output_str += $"Android (getprop ro.build.version.release)" }
     if $show_version and $show_time { $output_str += " " }
@@ -294,11 +312,13 @@ def version_info [ --show_version --show_time ] {
     echo $output_str
 }
 
+# Get device CPU architecture
 def architecture_info [] {
     let architecture = (getprop ro.product.cpu.abi)
     echo $architecture
 }
 
+# Get CPU model information
 def cpu_info [] {
     let output = (LANG=C lscpu)
 
@@ -310,10 +330,12 @@ def cpu_info [] {
     echo $cpu_list
 }
 
+# Get total memory information
 def memory_info [] {
     open /proc/meminfo | grep MemTotal | awk '{printf "%.2f GB", $2/1024/1024}'
 }
 
+# Get device locale settings
 def locale_info [] {
     mut lang = (getprop persist.sys.locale)
     if $lang == "" {
@@ -325,34 +347,43 @@ def locale_info [] {
     echo $lang
 }
 
+# Get current shell information
 def get_shell [] {
-    mut shell = ($env | get "shell"? | default "/system/bin/sh") # $SHELL 可能不存在，默认 sh
+    mut shell = ($env | get "shell"? | default "/system/bin/sh") # $SHELL may not exist, defaulting to /system/bin/sh
     let shell_path = $shell | split row "/"
     let path_len = $shell_path | length
 
     echo $shell_path | last
 }
 
-def color_info [type printable_space] {
+# Generate colored text for terminal output
+def color_info [
+    type # Color type (normal/bright)
+    printable_space # Available space for coloring
+    color_string = "   " # String to colorize
+    --fg # Use foreground colors instead of background
+] {
     if $printable_space <= 0 {
         return ""
     }
 
+    let len = ($color_string | str length)
+    let t = if $type == "bright" { if $fg { 9 } else { 10 } } else { if $fg { 3 } else { 4 } }
+            
     mut text = ""
-    mut t = 4
-    if $type == "bright" {
-        $t = 10
-    }
-
-    for $j in 0..23 {
-        if $j == $printable_space { break }
-        $text += $"\e[($t)(($j - 2) / 3 | math ceil)m \e[0m"
+    for $j in 0..($len * 8 - 1) {
+        let char = $color_string | split chars | get ($j mod $len)
+        if $j >= $printable_space { break }
+        $text += $"\e[($t)($j / $len | math floor)m($char)\e[0m"
     }
 
     echo $text
 }
 
-def print_underline [times] {
+# Print underline characters
+def print_underline [
+    times # Number of underline characters to print
+] {
     if $times <= 0 {
         return ""
     }
@@ -362,7 +393,11 @@ def print_underline [times] {
     }
 }
 
-def get_first_n_chars [in_str n] {
+# Get first N characters from string
+def get_first_n_chars [
+    in_str # Input string
+    n # Number of characters to get
+] {
     if $n < 0 {
         return ""
     }
@@ -370,16 +405,15 @@ def get_first_n_chars [in_str n] {
     echo $in_str | str substring ..$n
 }
 
-def show_info [brand display_icon show_icon_info json indentation info_space] {
-    let terminal_columns = term size | get "columns"
-    let colors = get_ascii_colors $display_icon
-    let icon = $"(get_ascii_icon $display_icon)"
-    mut info_list = {
-        Brand: $brand
+# Collect all system information into a table
+def get_info_list [] {
+    echo {
+        Brand: (brand_info)
         Mfr: (mfr_info)
         Host: (host_name_info)
         Version: (version_info --show_version --show_time)
         Kernel: (kernel_info)
+        Sdk: (sdk_info)
         Bootloader: (locked_info)
         Rooted: (rooted_info)
         Locale: (locale_info)
@@ -388,8 +422,23 @@ def show_info [brand display_icon show_icon_info json indentation info_space] {
         "CPU Model": (cpu_info)
         Memory: (memory_info)
     }
+}
 
-    if $json == false {
+# Display system information with formatting
+def show_info [
+    display_icon # Icon to display
+    show_icon_info # Table with icon/info display flags
+    is_json # Output in JSON format
+    indentation # JSON indentation level
+    info_space # Spacing between icon and info
+] {
+    let terminal_columns = term size | get "columns"
+    let colors = get_ascii_colors $display_icon
+    let icon = $"(get_ascii_icon $display_icon)"
+
+    mut info_list = (get_info_list)
+
+    if $is_json == false {
         mut icon_len = ($icon | split row "\n" | length)
         mut icon_wid = ($icon | split row "\n" | last | str length)
         mut space = $info_space
@@ -551,8 +600,7 @@ def main [
         }
     }
 
-    let brand = (getprop ro.product.brand)
-    mut display_icon = $brand
+    mut display_icon = (brand_info)
 
     if $icon != null {
         $display_icon = $icon
@@ -571,5 +619,5 @@ def main [
         $show_icon_info.info = false
     }
 
-    show_info $brand $display_icon $show_icon_info $json $indentation $space
+    show_info $display_icon $show_icon_info $json $indentation $space
 }
